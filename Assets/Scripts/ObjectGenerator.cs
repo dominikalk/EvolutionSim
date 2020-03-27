@@ -21,7 +21,6 @@ public class ObjectGenerator : MonoBehaviour
     public void generateObjects()
     {
         SimSettings simSettings = FindObjectOfType<SimSettings>();
-        GameObject objectParent = GameObject.FindGameObjectWithTag("objectParent");
         int terrainSize = simSettings.terrainSize;
         int objectThickness = simSettings.objectThickness;
         bool[,] usedBlocks = new bool[terrainSize, terrainSize];
@@ -60,13 +59,12 @@ public class ObjectGenerator : MonoBehaviour
             }
         }
 
-        int offset = Random.Range(0, 100);
         for (int i = 0; i < terrainSize; i++)
         {
             for (int v = 0; v < terrainSize; v++)
             {
-                float xCoord = (v / 40f) + offset;
-                float zCoord = (i / 40f) + offset;
+                float xCoord = (v / 40f) + simSettings.objectOffset;
+                float zCoord = (i / 40f) + simSettings.objectOffset;
 
                 float tempPerlin = Mathf.PerlinNoise(xCoord, zCoord);
                 if (tempPerlin <= 0)
@@ -79,7 +77,7 @@ public class ObjectGenerator : MonoBehaviour
                 if (topHeights[v, i] > 10 && isSpawn == 5)
                 {
                     GameObject newObject = Instantiate(objects[whatObject], new Vector3(v + 0.5f, topHeights[v, i], terrainSize - i - 0.5f), Quaternion.Euler(0, rotation * 90f, 0));
-                    newObject.transform.parent = objectParent.transform;
+                    newObject.transform.parent = gameObject.transform;
                     usedBlocks[v, i] = true;
                 }
             }
@@ -87,7 +85,7 @@ public class ObjectGenerator : MonoBehaviour
 
         simSettings.blockHeights = blockHeights;
         simSettings.usedBlocks = usedBlocks;
-        Destroy(this.gameObject);
+        FindObjectOfType<PlantGenerator>().generatePlants();
     }
 }
 

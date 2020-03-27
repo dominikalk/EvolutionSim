@@ -18,6 +18,7 @@ public class CameraController : MonoBehaviour
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         myRigid = GetComponent<Rigidbody>();
+        Debug.Log(CalcPosition.findArrayPos(new Vector3(1,1,1)));
     }
 
     // Update is called once per frame

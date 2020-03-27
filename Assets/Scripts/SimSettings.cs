@@ -7,6 +7,7 @@ public class SimSettings: MonoBehaviour
     // User Set Properties
     public int terrainSize;
     public int objectThickness;
+    public int objectOffset;
     public float evolMultplier = 1;
 
     // Other Properties
@@ -16,7 +17,7 @@ public class SimSettings: MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-       
+        objectOffset = Random.Range(0, 100);
     }
 
     // Update is called once per frame

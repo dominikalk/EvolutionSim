@@ -190,6 +190,8 @@ Movement:
  - I optimised and corrected the block height arrays
  - I got random movement working
  - next i need to make sure the animal doesnt back track
+ - make sure they cant go off the edge
+
 
 
 */
