@@ -18,7 +18,6 @@ public class CameraController : MonoBehaviour
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         myRigid = GetComponent<Rigidbody>();
-        Debug.Log(CalcPosition.findArrayPos(new Vector3(1,1,1)));
     }
 
     // Update is called once per frame
@@ -50,7 +49,8 @@ public class CameraController : MonoBehaviour
         {
             transform.position = new Vector3(transform.position.x, 10f, transform.position.z);
         }
-        if (transform.position.x < -256)
+        /*
+        if (transform.position.x < 0)
         {
             transform.position = new Vector3(-256f, transform.position.y, transform.position.z);
         }
@@ -58,13 +58,13 @@ public class CameraController : MonoBehaviour
         {
             transform.position = new Vector3(256f, transform.position.y, transform.position.z);
         }
-        if (transform.position.z < -256)
+        if (transform.position.z < 0)
         {
             transform.position = new Vector3(transform.position.x, transform.position.y, -256f);
         }
         if (transform.position.z > 256)
         {
             transform.position = new Vector3(transform.position.x, transform.position.y, 256f);
-        }
+        }*/
     }
 }

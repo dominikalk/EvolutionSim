@@ -16,6 +16,7 @@ public class Animal : MonoBehaviour
         public float rowdiness;
         public float maxAge;
         public int age;
+        public float range;
     }
     public Stat stat = new Stat();
     public Stat[] parentStats = new Stat[2];
@@ -23,26 +24,13 @@ public class Animal : MonoBehaviour
     int prevXPos;
     int prevYPos;
 
-    int xPos = 0;
-    int yPos = 0;
+    public int xPos;
+    public int yPos;
 
     public SimSettings simSettings;
     public GameObject thisGameObject;
 
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        setStatValues();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    void setStatValues()
+    public void setStatValues()
     {
         stat.maxHealth = (parentStats[0].maxHealth + parentStats[0].maxHealth) / 2;
         stat.maxEnergy = (parentStats[0].maxEnergy + parentStats[0].maxEnergy) / 2;
@@ -50,6 +38,7 @@ public class Animal : MonoBehaviour
         stat.size = (parentStats[0].size + parentStats[0].size) / 2;
         stat.rowdiness = (parentStats[0].rowdiness + parentStats[0].rowdiness) / 2;
         stat.maxAge = (parentStats[0].maxAge + parentStats[0].maxAge) / 2;
+        stat.range = (parentStats[0].range + parentStats[0].range) / 2;
 
         evolveStats();
 
@@ -77,18 +66,12 @@ public class Animal : MonoBehaviour
 
         randMultiplier = (Random.Range(90, 111) / 100) * simSettings.evolMultplier;
         stat.maxAge *= randMultiplier;
+
+        randMultiplier = (Random.Range(90, 111) / 100) * simSettings.evolMultplier;
+        stat.range *= randMultiplier;
     }
 
-    public IEnumerator tick()
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(2f);
-            randomMove();
-        }
-    }
-
-    void randomMove()
+    public void randomMove()
     {
         List<int[]> positions = new List<int[]>();
         int terrainSize = simSettings.terrainSize;
@@ -97,7 +80,7 @@ public class Animal : MonoBehaviour
 
         for (int i = 0; i < 8; i++)
         {
-            if (surrounding[i, 0] > 0 && surrounding[i, 0] <= terrainSize && surrounding[i, 1] > 0 && surrounding[i, 1] <= terrainSize)
+            if (surrounding[i, 0] > 0 && surrounding[i, 0] <= terrainSize && surrounding[i, 1] > 0 && surrounding[i, 1] <= terrainSize && simSettings.blockHeights[surrounding[i, 0], surrounding[i, 1]] >= 10)
             {
                 if (!simSettings.usedBlocks[surrounding[i, 0], surrounding[i, 1]])
                 {
@@ -127,11 +110,14 @@ public class Animal : MonoBehaviour
             transform.position = new Vector3(newPosition[0] + 0.5f, simSettings.blockHeights[newPosition[0], newPosition[1]], terrainSize - newPosition[1] - 0.5f);
             xPos = newPosition[0];
             yPos = newPosition[1];
+
+            simSettings.usedBlocks[prevXPos, prevYPos] = false;
+            simSettings.usedBlocks[xPos, yPos] = true;
         }
         else
         {
-            prevXPos = Random.Range(0, terrainSize + 1);
-            prevYPos = Random.Range(0, terrainSize + 1);
+            prevXPos = -1;
+            prevYPos = -1;
         }
     }
 
@@ -150,6 +136,7 @@ public class Animal : MonoBehaviour
     int[,] findSurrounding(int x, int y, bool isPrev)
     {
         int[,] surroundingBlocks;
+        // includes middle block
         if (isPrev)
         {
             surroundingBlocks = new int[,]
@@ -161,10 +148,11 @@ public class Animal : MonoBehaviour
                 {x + 1, y},
                 {x + 1, y + 1},
                 {x, y + 1},
-                {x + 1, y + 1},
+                {x - 1, y + 1},
                 {x, y}
             };
         }
+        //discludes middle block
         else
         {
             surroundingBlocks = new int[,]
@@ -172,14 +160,97 @@ public class Animal : MonoBehaviour
                 {x - 1, y - 1},
                 {x, y - 1},
                 {x + 1, y - 1},
-                {x - 1, y},
                 {x + 1, y},
                 {x + 1, y + 1},
                 {x, y + 1},
-                {x + 1, y + 1}
+                {x - 1, y + 1},
+                {x - 1, y}
             };
         }
         return surroundingBlocks;
+    }
+
+    public void moveTowards(int toX, int toY)
+    {
+        // Works out angle between positions
+        float angle = Mathf.Atan2(yPos - toY, toX - xPos) * 180 / Mathf.PI;
+        if (angle < 0)
+        {
+            angle = 360 + angle;
+        }
+        List<int[]> priority = new List<int[]>();
+        int[,] surrounding = findSurrounding(xPos, yPos, false);
+
+        // Picks the block closest to the position
+        if (angle < 157.5 && angle >= 112.5)
+        {
+            priority.Add(new int[] { surrounding[0, 0], surrounding[0, 1] });
+        }
+        if (angle < 112.5 && angle >= 67.5)
+        {
+            priority.Add(new int[] { surrounding[1, 0], surrounding[1, 1] });
+        }
+        if (angle < 67.5 && angle >= 22.5)
+        {
+            priority.Add(new int[] { surrounding[2, 0], surrounding[2, 1] });
+        }
+        if (angle < 22.5 || angle >= 337.5)
+        {
+            priority.Add(new int[] { surrounding[3, 0], surrounding[3, 1] });
+        }
+        if (angle < 337.5 && angle >= 292.5)
+        {
+            priority.Add(new int[] { surrounding[4, 0], surrounding[4, 1] });
+        }
+        if (angle < 292.5 && angle >= 247.5)
+        {
+            priority.Add(new int[] { surrounding[5, 0], surrounding[5, 1] });
+        }
+        if (angle < 247.5 && angle >= 202.5)
+        {
+            priority.Add(new int[] { surrounding[6, 0], surrounding[6, 1] });
+        }
+        if (angle < 202.5 && angle >= 157.5)
+        {
+            priority.Add(new int[] { surrounding[7, 0], surrounding[7, 1] });
+        }
+
+        //TODO assign prority
+
+        thisGameObject.transform.position = new Vector3(priority[0][0] + 0.5f, simSettings.blockHeights[priority[0][0], priority[0][1]], simSettings.terrainSize - priority[0][1] - 0.5f);
+        prevXPos = xPos;
+        prevYPos = yPos;
+
+        xPos = priority[0][0];
+        yPos = priority[0][1];
+
+        simSettings.usedBlocks[prevXPos, prevYPos] = false;
+        simSettings.usedBlocks[xPos, yPos] = true;
+    }
+
+    void jumpToPosition(Vector3 pos)
+    {
+        float desiredY = Mathf.Abs(pos.z - transform.position.z);
+        Vector3 desiredPosition = new Vector3(pos.x, 1f + desiredY, pos.z);
+        thisGameObject.transform.position = Vector3.MoveTowards(transform.position, desiredPosition, 20 * Time.deltaTime);
+    }
+
+    public List<GameObject> checkExists(List<GameObject> whatObjects)
+    {
+
+        List<GameObject> toRemoveList = new List<GameObject>();
+        foreach (GameObject whatObject in whatObjects)
+        {
+            if (whatObject == null)
+            {
+                toRemoveList.Add(whatObject);
+            }
+        }
+        foreach (GameObject toRemove in toRemoveList)
+        {
+            whatObjects.Remove(toRemove);
+        }
+        return whatObjects;
     }
 }
 
@@ -191,6 +262,7 @@ Movement:
  - I got random movement working
  - next i need to make sure the animal doesnt back track
  - make sure they cant go off the edge
+ - created a procedure to go to a specific position
 
 
 

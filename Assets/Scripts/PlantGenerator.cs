@@ -4,13 +4,12 @@ using UnityEngine;
 
 public class PlantGenerator : MonoBehaviour
 {
-    SimSettings simSettings;
     public GameObject[] plants;
 
     // Start is called before the first frame update
     void Start()
     {
-        simSettings = FindObjectOfType<SimSettings>();
+        
     }
 
     // Update is called once per frame
@@ -21,6 +20,7 @@ public class PlantGenerator : MonoBehaviour
 
     public void generatePlants()
     {
+        SimSettings simSettings = FindObjectOfType<SimSettings>();
         int terrainSize = simSettings.terrainSize;
         int objectThickness = simSettings.objectThickness * 2;
         float[,] blockHeights = simSettings.blockHeights;

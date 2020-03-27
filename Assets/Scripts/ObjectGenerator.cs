@@ -10,6 +10,7 @@ public class ObjectGenerator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
     }
 
     // Update is called once per frame
@@ -85,7 +86,7 @@ public class ObjectGenerator : MonoBehaviour
 
         simSettings.blockHeights = blockHeights;
         simSettings.usedBlocks = usedBlocks;
-        FindObjectOfType<PlantGenerator>().generatePlants();
+        simSettings.stage += 1;
     }
 }
 

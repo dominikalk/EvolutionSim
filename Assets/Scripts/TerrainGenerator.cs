@@ -11,8 +11,7 @@ public class TerrainGenerator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        terrainSize = FindObjectOfType<SimSettings>().terrainSize;
-        CreatePlane();
+        
     }
 
     // Update is called once per frame
@@ -21,10 +20,12 @@ public class TerrainGenerator : MonoBehaviour
 
     }
 
-    void CreatePlane()
+    public void CreatePlane()
     {
         //Init Variables
         ObjectGenerator objectGenerator = FindObjectOfType<ObjectGenerator>();
+        SimSettings simsettings = FindObjectOfType<SimSettings>();
+        terrainSize = simsettings.terrainSize;
         int arraySize = (terrainSize + 1) * (terrainSize + 1);
         Mesh newMesh = new Mesh();
         Vector3[] vertices = new Vector3[arraySize];
@@ -155,7 +156,7 @@ public class TerrainGenerator : MonoBehaviour
 
         gameObject.transform.position = new Vector3(terrainSize / 2, 0f, terrainSize / 2);
         water.transform.position = new Vector3(terrainSize / 2, 9f, terrainSize / 2);
-        objectGenerator.generateObjects();
+        simsettings.stage += 1;
     }
 
     bool CheckEnd(int pos)
