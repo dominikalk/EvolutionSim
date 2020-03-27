@@ -18,7 +18,7 @@ public class PlantGenerator : MonoBehaviour
         
     }
 
-    public void generatePlants()
+    public void GeneratePlants()
     {
         SimSettings simSettings = FindObjectOfType<SimSettings>();
         int terrainSize = simSettings.terrainSize;
@@ -48,5 +48,9 @@ public class PlantGenerator : MonoBehaviour
                 }
             }
         }
+        simSettings.stage += 1;
     }
+
+
+    //TODO Generate from here on
 }

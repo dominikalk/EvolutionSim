@@ -20,7 +20,7 @@ public class TerrainGenerator : MonoBehaviour
 
     }
 
-    public void CreatePlane()
+    public void GeneratePlane()
     {
         //Init Variables
         ObjectGenerator objectGenerator = FindObjectOfType<ObjectGenerator>();

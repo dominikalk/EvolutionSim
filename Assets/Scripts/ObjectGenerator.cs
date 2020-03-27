@@ -19,7 +19,7 @@ public class ObjectGenerator : MonoBehaviour
 
     }
 
-    public void generateObjects()
+    public void GenerateObjects()
     {
         SimSettings simSettings = FindObjectOfType<SimSettings>();
         int terrainSize = simSettings.terrainSize;

@@ -2,24 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public class Stat
+{
+    public float maxHealth;
+    public float health;
+    public float maxEnergy;
+    public float energy;
+    public float speed;
+    public float size;
+    public float rowdiness;
+    public float maxAge;
+    public float age;
+    public float range;
+}
+
 public class Animal : MonoBehaviour
 {
     // Animal Statistic Structure
-    public class Stat
-    {
-        public float maxHealth;
-        public float health;
-        public float maxEnergy;
-        public float energy;
-        public float speed;
-        public float size;
-        public float rowdiness;
-        public float maxAge;
-        public int age;
-        public float range;
-    }
     public Stat stat = new Stat();
-    public Stat[] parentStats = new Stat[2];
+    public Stat[] parentStats;
 
     int prevXPos;
     int prevYPos;
@@ -28,46 +29,45 @@ public class Animal : MonoBehaviour
     public int yPos;
 
     public SimSettings simSettings;
-    public GameObject thisGameObject;
 
     public void setStatValues()
     {
-        stat.maxHealth = (parentStats[0].maxHealth + parentStats[0].maxHealth) / 2;
-        stat.maxEnergy = (parentStats[0].maxEnergy + parentStats[0].maxEnergy) / 2;
-        stat.speed = (parentStats[0].speed + parentStats[0].speed) / 2;
-        stat.size = (parentStats[0].size + parentStats[0].size) / 2;
-        stat.rowdiness = (parentStats[0].rowdiness + parentStats[0].rowdiness) / 2;
-        stat.maxAge = (parentStats[0].maxAge + parentStats[0].maxAge) / 2;
-        stat.range = (parentStats[0].range + parentStats[0].range) / 2;
+        stat.maxHealth = (parentStats[0].maxHealth + parentStats[1].maxHealth) / 2;
+        stat.maxEnergy = (parentStats[0].maxEnergy + parentStats[1].maxEnergy) / 2;
+        stat.speed = (parentStats[0].speed + parentStats[1].speed) / 2;
+        stat.size = (parentStats[0].size + parentStats[1].size) / 2;
+        stat.rowdiness = (parentStats[0].rowdiness + parentStats[1].rowdiness) / 2;
+        stat.maxAge = (parentStats[0].maxAge + parentStats[1].maxAge) / 2;
+        stat.range = (parentStats[0].range + parentStats[1].range) / 2;
 
         evolveStats();
 
         stat.health = stat.maxHealth;
         stat.energy = stat.maxEnergy;
-        stat.age = 0;
+        stat.age = Random.Range(0.0f, stat.maxAge);
     }
 
     void evolveStats()
     {
-        float randMultiplier = (Random.Range(90, 111) / 100) * simSettings.evolMultplier;
+        float randMultiplier = (Random.Range(90, 111) / 100f) * simSettings.evolMultplier;
         stat.maxHealth *= randMultiplier;
 
-        randMultiplier = (Random.Range(90, 111) / 100) * simSettings.evolMultplier;
+        randMultiplier = (Random.Range(90, 111) / 100f) * simSettings.evolMultplier;
         stat.maxEnergy *= randMultiplier;
 
-        randMultiplier = (Random.Range(90, 111) / 100) * simSettings.evolMultplier;
+        randMultiplier = (Random.Range(90, 111) / 100f) * simSettings.evolMultplier;
         stat.speed *= randMultiplier;
 
-        randMultiplier = (Random.Range(90, 111) / 100) * simSettings.evolMultplier;
+        randMultiplier = (Random.Range(90, 111) / 100f) * simSettings.evolMultplier;
         stat.size *= randMultiplier;
 
-        randMultiplier = (Random.Range(90, 111) / 100) * simSettings.evolMultplier;
+        randMultiplier = (Random.Range(90, 111) / 100f) * simSettings.evolMultplier;
         stat.rowdiness *= randMultiplier;
 
-        randMultiplier = (Random.Range(90, 111) / 100) * simSettings.evolMultplier;
+        randMultiplier = (Random.Range(90, 111) / 100f) * simSettings.evolMultplier;
         stat.maxAge *= randMultiplier;
 
-        randMultiplier = (Random.Range(90, 111) / 100) * simSettings.evolMultplier;
+        randMultiplier = (Random.Range(90, 111) / 100f) * simSettings.evolMultplier;
         stat.range *= randMultiplier;
     }
 
@@ -217,7 +217,7 @@ public class Animal : MonoBehaviour
 
         //TODO assign prority
 
-        thisGameObject.transform.position = new Vector3(priority[0][0] + 0.5f, simSettings.blockHeights[priority[0][0], priority[0][1]], simSettings.terrainSize - priority[0][1] - 0.5f);
+        gameObject.transform.position = new Vector3(priority[0][0] + 0.5f, simSettings.blockHeights[priority[0][0], priority[0][1]], simSettings.terrainSize - priority[0][1] - 0.5f);
         prevXPos = xPos;
         prevYPos = yPos;
 
@@ -232,7 +232,7 @@ public class Animal : MonoBehaviour
     {
         float desiredY = Mathf.Abs(pos.z - transform.position.z);
         Vector3 desiredPosition = new Vector3(pos.x, 1f + desiredY, pos.z);
-        thisGameObject.transform.position = Vector3.MoveTowards(transform.position, desiredPosition, 20 * Time.deltaTime);
+        gameObject.transform.position = Vector3.MoveTowards(transform.position, desiredPosition, 20 * Time.deltaTime);
     }
 
     public List<GameObject> checkExists(List<GameObject> whatObjects)
@@ -251,6 +251,24 @@ public class Animal : MonoBehaviour
             whatObjects.Remove(toRemove);
         }
         return whatObjects;
+    }
+
+    public void checkDead()
+    {
+        if (stat.age >= stat.maxAge)
+        {
+            Debug.Log("Dead");
+            Destroy(gameObject);
+        }
+    }
+
+    public IEnumerator incrementAge()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(10);
+            stat.age += 0.1f;
+        }
     }
 }
 

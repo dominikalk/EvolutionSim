@@ -9,13 +9,13 @@ public class Rabbit : Animal
     // Start is called before the first frame update
     void Start()
     {
-        thisGameObject = this.gameObject;
         simSettings = FindObjectOfType<SimSettings>();
         plants = new List<GameObject>();
-        xPos = 50;
-        yPos = 50;
+        setStatValues();
+        GetComponent<SphereCollider>().radius = stat.range;
 
         StartCoroutine("tick");
+        StartCoroutine("incrementAge");
     }
 
     IEnumerator tick()
@@ -39,13 +39,14 @@ public class Rabbit : Animal
             {
                 randomMove();
             }
+            Debug.Log(stat.maxHealth);
         }
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        checkDead();
     }
 
     private void OnTriggerEnter(Collider other)

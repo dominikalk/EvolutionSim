@@ -9,6 +9,9 @@ public class SimSettings: MonoBehaviour
     public int objectThickness;
     public int objectOffset;
     public float evolMultplier = 1;
+    public int rabbits;
+    public int foxes;
+    public int wolves;
 
     // Other Properties
     public bool[,] usedBlocks;
@@ -17,6 +20,7 @@ public class SimSettings: MonoBehaviour
     bool stage1;
     bool stage2;
     bool stage3;
+    bool stage4;
 
     // Start is called before the first frame update
     void Start()
@@ -29,18 +33,22 @@ public class SimSettings: MonoBehaviour
     {
         if(stage == 1 && !stage1)
         {
-            FindObjectOfType<TerrainGenerator>().CreatePlane();
+            FindObjectOfType<TerrainGenerator>().GeneratePlane();
             stage1 = true;
         }
         if (stage == 2 && !stage2)
         {
-            FindObjectOfType<ObjectGenerator>().generateObjects();
+            FindObjectOfType<ObjectGenerator>().GenerateObjects();
             stage2 = true;
         }
         if (stage == 3 && !stage3)
         {
-            FindObjectOfType<PlantGenerator>().generatePlants();
+            FindObjectOfType<PlantGenerator>().GeneratePlants();
             stage3 = true;
+        }
+        if(stage == 4 && !stage4)
+        {
+            FindObjectOfType<AnimalGenerator>().GenerateAnimals();
         }
     }
 }
