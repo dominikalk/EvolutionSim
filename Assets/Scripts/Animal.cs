@@ -10,6 +10,7 @@ public class Stat
     public float energy;
     public float speed;
     public float size;
+    public float rowdinessMultiplier;
     public float rowdiness;
     public float maxAge;
     public float age;
@@ -36,7 +37,7 @@ public class Animal : MonoBehaviour
         stat.maxEnergy = (parentStats[0].maxEnergy + parentStats[1].maxEnergy) / 2;
         stat.speed = (parentStats[0].speed + parentStats[1].speed) / 2;
         stat.size = (parentStats[0].size + parentStats[1].size) / 2;
-        stat.rowdiness = (parentStats[0].rowdiness + parentStats[1].rowdiness) / 2;
+        stat.rowdinessMultiplier = (parentStats[0].rowdinessMultiplier + parentStats[1].rowdinessMultiplier) / 2;
         stat.maxAge = (parentStats[0].maxAge + parentStats[1].maxAge) / 2;
         stat.range = (parentStats[0].range + parentStats[1].range) / 2;
 
@@ -44,11 +45,14 @@ public class Animal : MonoBehaviour
 
         stat.health = stat.maxHealth;
         stat.energy = stat.maxEnergy;
+        //TODO make sure this starts at 0
+        stat.rowdiness = Random.Range(0, 50);
         stat.age = Random.Range(0.0f, stat.maxAge);
     }
 
     void evolveStats()
     {
+        //TODO make sure that evoMultiplier can also decrease
         float randMultiplier = (Random.Range(90, 111) / 100f) * simSettings.evolMultplier;
         stat.maxHealth *= randMultiplier;
 
@@ -62,7 +66,7 @@ public class Animal : MonoBehaviour
         stat.size *= randMultiplier;
 
         randMultiplier = (Random.Range(90, 111) / 100f) * simSettings.evolMultplier;
-        stat.rowdiness *= randMultiplier;
+        stat.rowdinessMultiplier *= randMultiplier;
 
         randMultiplier = (Random.Range(90, 111) / 100f) * simSettings.evolMultplier;
         stat.maxAge *= randMultiplier;
@@ -121,7 +125,7 @@ public class Animal : MonoBehaviour
         }
     }
 
-    int[] randomPicker(List<int[]> positions)
+    public int[] randomPicker(List<int[]> positions)
     {
         if(positions.Count > 0)
         {
@@ -133,7 +137,7 @@ public class Animal : MonoBehaviour
         }
     }
 
-    int[,] findSurrounding(int x, int y, bool isPrev)
+    public int[,] findSurrounding(int x, int y, bool isPrev)
     {
         int[,] surroundingBlocks;
         // includes middle block
@@ -216,6 +220,7 @@ public class Animal : MonoBehaviour
         }
 
         //TODO assign prority
+        // TODO take away usedBlocks
 
         gameObject.transform.position = new Vector3(priority[0][0] + 0.5f, simSettings.blockHeights[priority[0][0], priority[0][1]], simSettings.terrainSize - priority[0][1] - 0.5f);
         prevXPos = xPos;
@@ -228,16 +233,8 @@ public class Animal : MonoBehaviour
         simSettings.usedBlocks[xPos, yPos] = true;
     }
 
-    void jumpToPosition(Vector3 pos)
-    {
-        float desiredY = Mathf.Abs(pos.z - transform.position.z);
-        Vector3 desiredPosition = new Vector3(pos.x, 1f + desiredY, pos.z);
-        gameObject.transform.position = Vector3.MoveTowards(transform.position, desiredPosition, 20 * Time.deltaTime);
-    }
-
     public List<GameObject> checkExists(List<GameObject> whatObjects)
     {
-
         List<GameObject> toRemoveList = new List<GameObject>();
         foreach (GameObject whatObject in whatObjects)
         {
@@ -253,11 +250,36 @@ public class Animal : MonoBehaviour
         return whatObjects;
     }
 
-    public void checkDead()
+    public void checkStats()
     {
+        stat.energy -= stat.size * 0.1f;
+        stat.rowdiness += stat.rowdinessMultiplier;
+        if (stat.energy <= stat.maxEnergy / 5f)
+        {
+            stat.health -= 1;
+        }
+        else
+        {
+            stat.health += 1;
+            if (stat.health > stat.maxHealth)
+            {
+                stat.health = stat.maxHealth;
+            }
+        }
+
         if (stat.age >= stat.maxAge)
         {
-            Debug.Log("Dead");
+            Debug.Log("Age Death");
+            Destroy(gameObject);
+        }
+        if(stat.energy <= 0)
+        {
+            Debug.Log("Energy Death");
+            Destroy(gameObject);
+        }
+        if (stat.health <= 0)
+        {
+            Debug.Log("Health Death");
             Destroy(gameObject);
         }
     }

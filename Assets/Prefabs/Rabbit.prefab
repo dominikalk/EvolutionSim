@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4424065865691949593}
   m_Layer: 0
   m_Name: Rabbit
-  m_TagString: Untagged
+  m_TagString: rabbit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -46,8 +46,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa1e7cd6e9ff3cc43b78c45f54de2c26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  xPos: 0
+  yPos: 0
   simSettings: {fileID: 0}
-  thisGameObject: {fileID: 0}
+  rabbit: {fileID: 6433283991195670580}
 --- !u!135 &5523042769924510322
 SphereCollider:
   m_ObjectHideFlags: 0

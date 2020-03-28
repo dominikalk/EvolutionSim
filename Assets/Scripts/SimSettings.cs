@@ -26,6 +26,7 @@ public class SimSettings: MonoBehaviour
     void Start()
     {
         objectOffset = Random.Range(0, 100);
+        Time.timeScale = 1;
     }
 
     // Update is called once per frame

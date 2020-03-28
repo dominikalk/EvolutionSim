@@ -33,7 +33,7 @@ public class AnimalGenerator : MonoBehaviour
         parentStats[0].maxEnergy = 100;
         parentStats[0].speed = 1;
         parentStats[0].size = 10;
-        //parentStats[0].rowdiness = 100;
+        parentStats[0].rowdinessMultiplier = 1;
         parentStats[0].maxAge = 2;
         parentStats[0].range = 4;
 
@@ -41,7 +41,7 @@ public class AnimalGenerator : MonoBehaviour
         parentStats[1].maxEnergy = 100;
         parentStats[1].speed = 1;
         parentStats[1].size = 10;
-        //parentStats[1].rowdiness = 100;
+        parentStats[1].rowdinessMultiplier = 1;
         parentStats[1].maxAge = 2;
         parentStats[1].range = 4;
 
