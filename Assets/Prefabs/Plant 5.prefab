@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2885351938575886288}
   - component: {fileID: 3913398406741082796}
+  - component: {fileID: 6939131219244864733}
   m_Layer: 0
   m_Name: Plant 5
   m_TagString: plant
@@ -51,6 +52,20 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!136 &6939131219244864733
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5815736610697454946}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.43
+  m_Height: 0
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.45, z: 0}
 --- !u!1001 &6080984520559611458
 PrefabInstance:
   m_ObjectHideFlags: 0

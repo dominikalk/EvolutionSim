@@ -19,7 +19,6 @@ public class Stat
 
 public class Animal : MonoBehaviour
 {
-    // Animal Statistic Structure
     public Stat stat = new Stat();
     public Stat[] parentStats;
 
@@ -29,7 +28,12 @@ public class Animal : MonoBehaviour
     public int xPos;
     public int yPos;
 
+    public bool isChild;
+    public bool hasEaten;
+
     public SimSettings simSettings;
+    public GameObject skull;
+    public GameObject heart;
 
     public void setStatValues()
     {
@@ -45,33 +49,39 @@ public class Animal : MonoBehaviour
 
         stat.health = stat.maxHealth;
         stat.energy = stat.maxEnergy;
-        //TODO make sure this starts at 0
-        stat.rowdiness = Random.Range(0, 50);
-        stat.age = Random.Range(0.0f, stat.maxAge);
+        if (isChild)
+        {
+            stat.rowdiness = 0;
+            stat.age = 0;
+        }
+        else
+        {
+            stat.rowdiness = Random.Range(0, 50);
+            stat.age = Random.Range(0.0f, stat.maxAge);
+        }
     }
 
     void evolveStats()
     {
-        //TODO make sure that evoMultiplier can also decrease
-        float randMultiplier = (Random.Range(90, 111) / 100f) * simSettings.evolMultplier;
+        float randMultiplier = ((Random.Range(90, 111) / 100f) - 1f) * simSettings.evolMultplier + 1f;
         stat.maxHealth *= randMultiplier;
 
-        randMultiplier = (Random.Range(90, 111) / 100f) * simSettings.evolMultplier;
+        randMultiplier = ((Random.Range(90, 111) / 100f) - 1f) * simSettings.evolMultplier + 1f;
         stat.maxEnergy *= randMultiplier;
 
-        randMultiplier = (Random.Range(90, 111) / 100f) * simSettings.evolMultplier;
+        randMultiplier = ((Random.Range(90, 111) / 100f) - 1f) * simSettings.evolMultplier + 1f;
         stat.speed *= randMultiplier;
 
-        randMultiplier = (Random.Range(90, 111) / 100f) * simSettings.evolMultplier;
+        randMultiplier = ((Random.Range(90, 111) / 100f) - 1f) * simSettings.evolMultplier + 1f;
         stat.size *= randMultiplier;
 
-        randMultiplier = (Random.Range(90, 111) / 100f) * simSettings.evolMultplier;
+        randMultiplier = ((Random.Range(90, 111) / 100f) - 1f) * simSettings.evolMultplier + 1f;
         stat.rowdinessMultiplier *= randMultiplier;
 
-        randMultiplier = (Random.Range(90, 111) / 100f) * simSettings.evolMultplier;
+        randMultiplier = ((Random.Range(90, 111) / 100f) - 1f) * simSettings.evolMultplier + 1f;
         stat.maxAge *= randMultiplier;
 
-        randMultiplier = (Random.Range(90, 111) / 100f) * simSettings.evolMultplier;
+        randMultiplier = ((Random.Range(90, 111) / 100f) - 1f) * simSettings.evolMultplier + 1f;
         stat.range *= randMultiplier;
     }
 
@@ -174,63 +184,62 @@ public class Animal : MonoBehaviour
         return surroundingBlocks;
     }
 
+    float findDistance(int theXPos, int theYPos, int toX, int toY)
+    {
+        return Mathf.Sqrt((float)(toX - theXPos) * (float)(toX - theXPos) + (float)(toY - theYPos) * (float)(toY - theYPos));
+    }
+
     public void moveTowards(int toX, int toY)
     {
-        // Works out angle between positions
-        float angle = Mathf.Atan2(yPos - toY, toX - xPos) * 180 / Mathf.PI;
-        if (angle < 0)
-        {
-            angle = 360 + angle;
-        }
         List<int[]> priority = new List<int[]>();
         int[,] surrounding = findSurrounding(xPos, yPos, false);
+        List<int[]> notAdded = new List<int[]>();
 
-        // Picks the block closest to the position
-        if (angle < 157.5 && angle >= 112.5)
+        for(int i = 0; i < 8; i++)
         {
-            priority.Add(new int[] { surrounding[0, 0], surrounding[0, 1] });
-        }
-        if (angle < 112.5 && angle >= 67.5)
-        {
-            priority.Add(new int[] { surrounding[1, 0], surrounding[1, 1] });
-        }
-        if (angle < 67.5 && angle >= 22.5)
-        {
-            priority.Add(new int[] { surrounding[2, 0], surrounding[2, 1] });
-        }
-        if (angle < 22.5 || angle >= 337.5)
-        {
-            priority.Add(new int[] { surrounding[3, 0], surrounding[3, 1] });
-        }
-        if (angle < 337.5 && angle >= 292.5)
-        {
-            priority.Add(new int[] { surrounding[4, 0], surrounding[4, 1] });
-        }
-        if (angle < 292.5 && angle >= 247.5)
-        {
-            priority.Add(new int[] { surrounding[5, 0], surrounding[5, 1] });
-        }
-        if (angle < 247.5 && angle >= 202.5)
-        {
-            priority.Add(new int[] { surrounding[6, 0], surrounding[6, 1] });
-        }
-        if (angle < 202.5 && angle >= 157.5)
-        {
-            priority.Add(new int[] { surrounding[7, 0], surrounding[7, 1] });
+            notAdded.Add(new int[] { surrounding[i, 0], surrounding[i, 1] });
         }
 
-        //TODO assign prority
-        // TODO take away usedBlocks
+        for(int i = 0; i < 8; i++)
+        {
+            float distance = Mathf.Infinity;
+            int index = 10;
+            for(int v = 0; v < 8-i; v++)
+            {
+                if (findDistance(notAdded[v][0], notAdded[v][1], toX, toY) < distance)
+                {
+                    distance = findDistance(notAdded[v][0], notAdded[v][1], toX, toY);
+                    index = v;
+                }
+            }
+            priority.Add(notAdded[index]);
+            notAdded.RemoveAt(index);
+        }
 
-        gameObject.transform.position = new Vector3(priority[0][0] + 0.5f, simSettings.blockHeights[priority[0][0], priority[0][1]], simSettings.terrainSize - priority[0][1] - 0.5f);
-        prevXPos = xPos;
-        prevYPos = yPos;
+        List<int[]> toRemove = new List<int[]>();
+        for (int i = 0; i < priority.Count; i++)
+        {
+            if(simSettings.usedBlocks[priority[i][0], priority[i][1]] || simSettings.blockHeights[priority[i][0], priority[i][1]] <= 10){
+                toRemove.Add(new int[] { priority[i][0], priority[i][1] } );
+            }
+        }
+        for (int i = 0; i < toRemove.Count; i++)
+        {
+            priority.Remove(new int[] { toRemove[i][0], toRemove[i][1] });
+        }
 
-        xPos = priority[0][0];
-        yPos = priority[0][1];
+        if(priority.Count > 0)
+        {
+            gameObject.transform.position = new Vector3(priority[0][0] + 0.5f, simSettings.blockHeights[priority[0][0], priority[0][1]], simSettings.terrainSize - priority[0][1] - 0.5f);
+            prevXPos = xPos;
+            prevYPos = yPos;
 
-        simSettings.usedBlocks[prevXPos, prevYPos] = false;
-        simSettings.usedBlocks[xPos, yPos] = true;
+            xPos = priority[0][0];
+            yPos = priority[0][1];
+
+            simSettings.usedBlocks[prevXPos, prevYPos] = false;
+            simSettings.usedBlocks[xPos, yPos] = true;
+        }
     }
 
     public List<GameObject> checkExists(List<GameObject> whatObjects)
@@ -269,17 +278,23 @@ public class Animal : MonoBehaviour
 
         if (stat.age >= stat.maxAge)
         {
-            Debug.Log("Age Death");
+            GameObject newSkull = Instantiate(skull, gameObject.transform.position, Quaternion.identity);
+            newSkull.transform.parent = gameObject.transform.parent;
+            simSettings.usedBlocks[xPos, yPos] = false;
             Destroy(gameObject);
         }
         if(stat.energy <= 0)
         {
-            Debug.Log("Energy Death");
+            GameObject newSkull = Instantiate(skull, gameObject.transform.position, Quaternion.identity);
+            newSkull.transform.parent = gameObject.transform.parent;
+            simSettings.usedBlocks[xPos, yPos] = false;
             Destroy(gameObject);
         }
         if (stat.health <= 0)
         {
-            Debug.Log("Health Death");
+            GameObject newSkull = Instantiate(skull, gameObject.transform.position, Quaternion.identity);
+            newSkull.transform.parent = gameObject.transform.parent;
+            simSettings.usedBlocks[xPos, yPos] = false;
             Destroy(gameObject);
         }
     }
@@ -303,6 +318,7 @@ Movement:
  - next i need to make sure the animal doesnt back track
  - make sure they cant go off the edge
  - created a procedure to go to a specific position
+ - for move towards i initially used the angle between the blocks, but then i switched to the distance for ease of priority selection
 
 
 

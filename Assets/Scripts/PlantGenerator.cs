@@ -9,7 +9,7 @@ public class PlantGenerator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        StartCoroutine("spawnNewPlant");
     }
 
     // Update is called once per frame
@@ -22,7 +22,15 @@ public class PlantGenerator : MonoBehaviour
     {
         SimSettings simSettings = FindObjectOfType<SimSettings>();
         int terrainSize = simSettings.terrainSize;
-        int objectThickness = simSettings.objectThickness * 2;
+        int objectThickness;
+        if(simSettings.stage == 3)
+        {
+            objectThickness = simSettings.objectThickness * 2;
+        }
+        else
+        {
+            objectThickness = simSettings.objectThickness * 20;
+        }
         float[,] blockHeights = simSettings.blockHeights;
 
         for (int i = 0; i < terrainSize; i++)
@@ -48,9 +56,18 @@ public class PlantGenerator : MonoBehaviour
                 }
             }
         }
-        simSettings.stage += 1;
+        if(simSettings.stage == 3)
+        {
+            simSettings.stage += 1;
+        }
     }
 
-
-    //TODO Generate from here on
+    IEnumerator spawnNewPlant()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(FindObjectOfType<SimSettings>().objectThickness / 2f);
+            GeneratePlants();
+        }
+    }
 }
