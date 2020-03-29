@@ -296,7 +296,7 @@ MonoBehaviour:
   terrainSize: 128
   objectThickness: 20
   evolMultplier: 5
-  rabbits: 50
+  rabbits: 2
   foxes: 0
   wolves: 0
   objectOffset: 0

@@ -20,15 +20,6 @@ public class Rabbit : Animal
         StartCoroutine("incrementAge");
     }
 
-    IEnumerator tick()
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(stat.speed);
-            chooseMove();
-        }
-    }
-
     // Update is called once per frame
     void Update()
     {
