@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 241395518952319304}
   - component: {fileID: 3490329709984850225}
   - component: {fileID: 1920385564965142420}
+  - component: {fileID: 1097620734251831348}
   m_Layer: 0
   m_Name: Plant 3
   m_TagString: plant
@@ -66,6 +67,18 @@ CapsuleCollider:
   m_Height: 0
   m_Direction: 1
   m_Center: {x: 0, y: 0.31, z: 0}
+--- !u!114 &1097620734251831348
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7947924437458571286}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edd50e89994c8224588b10329fa634a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &8215057548995781410
 PrefabInstance:
   m_ObjectHideFlags: 0

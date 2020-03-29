@@ -19,6 +19,11 @@ public class Stat
 
 public class Animal : MonoBehaviour
 {
+    public GameObject selfObject;
+    public List<GameObject> prey;
+    public List<GameObject> selves;
+    public List<GameObject> predators;
+
     public Stat stat = new Stat();
     public Stat[] parentStats;
 
@@ -35,10 +40,32 @@ public class Animal : MonoBehaviour
     public GameObject skull;
     public GameObject heart;
 
+    bool moving;
+    Vector3 startPos;
+    Vector3 endPos;
+    float trajectoryHeight = 2;
+    float incrementor = 0;
+
+    //TODO recheck height onsistancy
+
+    public void theUpdate()
+    {
+        if (moving)
+        {
+            incrementor += (1f / stat.speed) * (1f / 0.5f) * Time.deltaTime;
+            Vector3 currentPos = Vector3.Lerp(startPos, endPos, incrementor);
+            currentPos.y += trajectoryHeight * Mathf.Sin(Mathf.Clamp01(incrementor) * Mathf.PI);
+            gameObject.transform.position = currentPos;
+            if (gameObject.transform.position == endPos)
+            {
+                moving = false;
+                incrementor = 0;
+            }
+        }
+    }
+
     public void setStatValues()
     {
-        stat.maxHealth = (parentStats[0].maxHealth + parentStats[1].maxHealth) / 2;
-        stat.maxEnergy = (parentStats[0].maxEnergy + parentStats[1].maxEnergy) / 2;
         stat.speed = (parentStats[0].speed + parentStats[1].speed) / 2;
         stat.size = (parentStats[0].size + parentStats[1].size) / 2;
         stat.rowdinessMultiplier = (parentStats[0].rowdinessMultiplier + parentStats[1].rowdinessMultiplier) / 2;
@@ -47,8 +74,11 @@ public class Animal : MonoBehaviour
 
         evolveStats();
 
+        stat.maxHealth = 100f * stat.size;
+        stat.maxEnergy = 100f * stat.size;
         stat.health = stat.maxHealth;
         stat.energy = stat.maxEnergy;
+
         if (isChild)
         {
             stat.rowdiness = 0;
@@ -64,12 +94,6 @@ public class Animal : MonoBehaviour
     void evolveStats()
     {
         float randMultiplier = ((Random.Range(90, 111) / 100f) - 1f) * simSettings.evolMultplier + 1f;
-        stat.maxHealth *= randMultiplier;
-
-        randMultiplier = ((Random.Range(90, 111) / 100f) - 1f) * simSettings.evolMultplier + 1f;
-        stat.maxEnergy *= randMultiplier;
-
-        randMultiplier = ((Random.Range(90, 111) / 100f) - 1f) * simSettings.evolMultplier + 1f;
         stat.speed *= randMultiplier;
 
         randMultiplier = ((Random.Range(90, 111) / 100f) - 1f) * simSettings.evolMultplier + 1f;
@@ -83,6 +107,103 @@ public class Animal : MonoBehaviour
 
         randMultiplier = ((Random.Range(90, 111) / 100f) - 1f) * simSettings.evolMultplier + 1f;
         stat.range *= randMultiplier;
+    }
+
+    public void chooseMove()
+    {
+        prey = checkExists(prey);
+        selves = checkExists(selves);
+        predators = checkExists(predators);
+        bool moved = false;
+
+        if (stat.energy < stat.maxEnergy / 2f)
+        {
+            if (prey.Count > 0)
+            {
+                float toX = prey[0].transform.position.x - 0.5f;
+                float toY = simSettings.terrainSize - 0.5f - prey[0].transform.position.z;
+                moveTowards((int)toX, (int)toY);
+                moved = true;
+
+                int[,] surrounding = findSurrounding(xPos, yPos, false);
+                for (int i = 0; i < 8; i++)
+                {
+                    if (surrounding[i, 0] == toX && surrounding[i, 1] == toY)
+                    {
+                        hasEaten = true;
+                        if (true)
+                        {
+                            prey[0].GetComponent<Plant>().eat();
+                        }
+                        else
+                        {
+                            //TODO write damage thing
+                            //prey[0].GetComponent<Animal>().eat();
+                        }
+                        prey.RemoveAt(0);
+                        stat.energy += 20;
+                        if (stat.energy > stat.maxEnergy)
+                        {
+                            stat.energy = stat.maxEnergy;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (stat.rowdiness >= 50 && stat.energy > stat.maxEnergy / 2f && hasEaten)
+        {
+            if (selves.Count > 0)
+            {
+                float toX = selves[0].transform.position.x - 0.5f;
+                float toY = simSettings.terrainSize - 0.5f - selves[0].transform.position.z;
+                moveTowards((int)toX, (int)toY);
+                moved = true;
+
+                int[,] surrounding = findSurrounding(xPos, yPos, false);
+                for (int i = 0; i < 8; i++)
+                {
+                    if (surrounding[i, 0] == toX && surrounding[i, 1] == toY)
+                    {
+                        List<int[]> freeSurrounding = new List<int[]>();
+                        for (int v = 0; v < 8; v++)
+                        {
+                            if (!simSettings.usedBlocks[surrounding[v, 0], surrounding[v, 1]])
+                            {
+                                freeSurrounding.Add(new int[] { surrounding[v, 0], surrounding[v, 1] });
+                            }
+                        }
+                        int[] childPosition = randomPicker(freeSurrounding);
+                        if (childPosition.Length > 0)
+                        {
+                            stat.rowdiness = 0;
+                            stat.energy -= stat.maxEnergy / 4f;
+                            GameObject newHeart = Instantiate(heart, transform.position, Quaternion.identity);
+                            newHeart.transform.parent = gameObject.transform.parent;
+                            GameObject child = Instantiate(selfObject, new Vector3(childPosition[0] + 0.5f, simSettings.blockHeights[childPosition[0], childPosition[1]], simSettings.terrainSize - childPosition[1] - 0.5f), Quaternion.identity);
+                            Animal script = child.GetComponent<Animal>();
+                            script.xPos = childPosition[0];
+                            script.yPos = childPosition[1];
+                            script.parentStats = new Stat[]
+                            {
+                                    stat,
+                                    selves[0].GetComponent<Rabbit>().stat
+                            };
+                            script.isChild = true;
+                            simSettings.usedBlocks[childPosition[0], childPosition[1]] = true;
+                            child.transform.parent = gameObject.transform.parent.transform;
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (!moved)
+        {
+            randomMove();
+        }
+        checkStats();
     }
 
     public void randomMove()
@@ -116,12 +237,11 @@ public class Animal : MonoBehaviour
 
         int[] newPosition = randomPicker(positions);
 
-        prevXPos = xPos;
-        prevYPos = yPos;
-
         if(newPosition.Length > 0)
         {
-            transform.position = new Vector3(newPosition[0] + 0.5f, simSettings.blockHeights[newPosition[0], newPosition[1]], terrainSize - newPosition[1] - 0.5f);
+            prevXPos = xPos;
+            prevYPos = yPos;
+            jumpTo(new Vector3(newPosition[0] + 0.5f, simSettings.blockHeights[newPosition[0], newPosition[1]], terrainSize - newPosition[1] - 0.5f));
             xPos = newPosition[0];
             yPos = newPosition[1];
 
@@ -133,6 +253,59 @@ public class Animal : MonoBehaviour
             prevXPos = -1;
             prevYPos = -1;
         }
+    }
+
+    public void moveTowards(int toX, int toY)
+    {
+        List<int[]> priority = new List<int[]>();
+        int[,] surrounding = findSurrounding(xPos, yPos, false);
+        List<int[]> notAdded = new List<int[]>();
+
+        for (int i = 0; i < 8; i++)
+        {
+            notAdded.Add(new int[] { surrounding[i, 0], surrounding[i, 1] });
+        }
+
+        for (int i = 0; i < 8; i++)
+        {
+            float distance = Mathf.Infinity;
+            int index = 10;
+            for (int v = 0; v < 8 - i; v++)
+            {
+                if (findDistance(notAdded[v][0], notAdded[v][1], toX, toY) < distance)
+                {
+                    distance = findDistance(notAdded[v][0], notAdded[v][1], toX, toY);
+                    index = v;
+                }
+            }
+            if (!simSettings.usedBlocks[notAdded[index][0], notAdded[index][1]])
+            {
+                priority.Add(notAdded[index]);
+            }
+            notAdded.RemoveAt(index);
+        }
+
+        if (priority.Count > 0)
+        {
+            jumpTo(new Vector3(priority[0][0] + 0.5f, simSettings.blockHeights[priority[0][0], priority[0][1]], simSettings.terrainSize - priority[0][1] - 0.5f));
+            prevXPos = xPos;
+            prevYPos = yPos;
+
+            xPos = priority[0][0];
+            yPos = priority[0][1];
+
+            simSettings.usedBlocks[prevXPos, prevYPos] = false;
+            simSettings.usedBlocks[xPos, yPos] = true;
+        }
+    }
+
+    void jumpTo(Vector3 position)
+    {
+        float angle = Mathf.Atan2(position.x - gameObject.transform.position.x,position.z - gameObject.transform.position.z) * 180 / Mathf.PI;
+        gameObject.transform.rotation = Quaternion.Euler(0, angle, 0);
+        moving = true;
+        startPos = gameObject.transform.position;
+        endPos = position;
     }
 
     public int[] randomPicker(List<int[]> positions)
@@ -189,59 +362,6 @@ public class Animal : MonoBehaviour
         return Mathf.Sqrt((float)(toX - theXPos) * (float)(toX - theXPos) + (float)(toY - theYPos) * (float)(toY - theYPos));
     }
 
-    public void moveTowards(int toX, int toY)
-    {
-        List<int[]> priority = new List<int[]>();
-        int[,] surrounding = findSurrounding(xPos, yPos, false);
-        List<int[]> notAdded = new List<int[]>();
-
-        for(int i = 0; i < 8; i++)
-        {
-            notAdded.Add(new int[] { surrounding[i, 0], surrounding[i, 1] });
-        }
-
-        for(int i = 0; i < 8; i++)
-        {
-            float distance = Mathf.Infinity;
-            int index = 10;
-            for(int v = 0; v < 8-i; v++)
-            {
-                if (findDistance(notAdded[v][0], notAdded[v][1], toX, toY) < distance)
-                {
-                    distance = findDistance(notAdded[v][0], notAdded[v][1], toX, toY);
-                    index = v;
-                }
-            }
-            priority.Add(notAdded[index]);
-            notAdded.RemoveAt(index);
-        }
-
-        List<int[]> toRemove = new List<int[]>();
-        for (int i = 0; i < priority.Count; i++)
-        {
-            if(simSettings.usedBlocks[priority[i][0], priority[i][1]] || simSettings.blockHeights[priority[i][0], priority[i][1]] <= 10){
-                toRemove.Add(new int[] { priority[i][0], priority[i][1] } );
-            }
-        }
-        for (int i = 0; i < toRemove.Count; i++)
-        {
-            priority.Remove(new int[] { toRemove[i][0], toRemove[i][1] });
-        }
-
-        if(priority.Count > 0)
-        {
-            gameObject.transform.position = new Vector3(priority[0][0] + 0.5f, simSettings.blockHeights[priority[0][0], priority[0][1]], simSettings.terrainSize - priority[0][1] - 0.5f);
-            prevXPos = xPos;
-            prevYPos = yPos;
-
-            xPos = priority[0][0];
-            yPos = priority[0][1];
-
-            simSettings.usedBlocks[prevXPos, prevYPos] = false;
-            simSettings.usedBlocks[xPos, yPos] = true;
-        }
-    }
-
     public List<GameObject> checkExists(List<GameObject> whatObjects)
     {
         List<GameObject> toRemoveList = new List<GameObject>();
@@ -261,7 +381,7 @@ public class Animal : MonoBehaviour
 
     public void checkStats()
     {
-        stat.energy -= stat.size * 0.1f;
+        stat.energy -= stat.size * (stat.range / 4f);
         stat.rowdiness += stat.rowdinessMultiplier;
         if (stat.energy <= stat.maxEnergy / 5f)
         {

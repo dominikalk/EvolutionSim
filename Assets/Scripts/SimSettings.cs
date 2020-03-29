@@ -7,13 +7,13 @@ public class SimSettings: MonoBehaviour
     // User Set Properties
     public int terrainSize;
     public int objectThickness;
-    public int objectOffset;
     public float evolMultplier = 1;
     public int rabbits;
     public int foxes;
     public int wolves;
 
     // Other Properties
+    public int objectOffset;
     public bool[,] usedBlocks;
     public float[,] blockHeights;
     public int stage = 1;
@@ -36,7 +36,7 @@ public class SimSettings: MonoBehaviour
         maxHealth = 100,
         maxEnergy = 100,
         speed = 1,
-        size = 10,
+        size = 1,
         rowdinessMultiplier = 1,
         maxAge = 2,
         range = 4
