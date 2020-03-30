@@ -34,7 +34,7 @@ public class Animal : MonoBehaviour
     public int yPos;
 
     public bool isChild;
-    public bool hasEaten;
+    public bool hasEaten = false;
 
     public SimSettings simSettings;
     public GameObject skull;
@@ -43,8 +43,10 @@ public class Animal : MonoBehaviour
     bool moving;
     Vector3 startPos;
     Vector3 endPos;
-    float trajectoryHeight = 2;
+    float trajectoryHeight = 1;
     float incrementor = 0;
+
+    public bool sustainableEating = true;
 
     //TODO recheck height onsistancy
 
@@ -54,7 +56,10 @@ public class Animal : MonoBehaviour
         {
             incrementor += (1f / stat.speed) * (1f / 0.5f) * Time.deltaTime;
             Vector3 currentPos = Vector3.Lerp(startPos, endPos, incrementor);
-            currentPos.y += trajectoryHeight * Mathf.Sin(Mathf.Clamp01(incrementor) * Mathf.PI);
+            if (gameObject.tag == "rabbit")
+            {
+                currentPos.y += trajectoryHeight * Mathf.Sin(Mathf.Clamp01(incrementor) * Mathf.PI);
+            }
             gameObject.transform.position = currentPos;
             if (gameObject.transform.position == endPos)
             {
@@ -119,68 +124,77 @@ public class Animal : MonoBehaviour
         // Run Away From Closest Predator
         if (predators.Count > 0)
         {
-            int index = findClosest(predators);
-            float toX = prey[index].transform.position.x - 0.5f;
-            float toY = simSettings.terrainSize - 0.5f - prey[index].transform.position.z;
-            moveTowards((int)toX, (int)toY, false);
-            moved = true;
-        }
-
-        // Eat The Closest Food
-        if (stat.energy < stat.maxEnergy / 2f && prey.Count > 0)
-        {
-            int index = findClosest(prey);
-            float toX = prey[index].transform.position.x - 0.5f;
-            float toY = simSettings.terrainSize - 0.5f - prey[index].transform.position.z;
-            moveTowards((int)toX, (int)toY, true);
-            moved = true;
+            int index = findClosest(predators, false);
+            Stat predatorStat = predators[index].GetComponent<Animal>().stat;
+            if (predatorStat.energy < predatorStat.maxEnergy / 2f)
+            {
+                float toX = predators[index].transform.position.x - 0.5f;
+                float toY = simSettings.terrainSize - 0.5f - predators[index].transform.position.z;
+                moveTowards((int)toX, (int)toY, false);
+                moved = true;
+            }
         }
 
         // Reproduce With The Closest Same Animal
-        if (stat.rowdiness >= 50 && stat.energy > stat.maxEnergy / 2f && hasEaten && selves.Count > 0)
+        if (stat.rowdiness >= 50 && hasEaten && selves.Count > 0 && !moved)
         {
-            int index = findClosest(selves);
-            float toX = selves[index].transform.position.x - 0.5f;
-            float toY = simSettings.terrainSize - 0.5f - selves[index].transform.position.z;
-            moveTowards((int)toX, (int)toY, true);
-            moved = true;
-
-            int[,] surrounding = findSurrounding(xPos, yPos, false);
-            for (int i = 0; i < 8; i++)
+            int index = findClosest(selves, true);
+            if (selves[index].GetComponent<Animal>().hasEaten)
             {
-                if (surrounding[i, 0] == toX && surrounding[i, 1] == toY)
+                float toX = selves[index].transform.position.x - 0.5f;
+                float toY = simSettings.terrainSize - 0.5f - selves[index].transform.position.z;
+                moveTowards((int)toX, (int)toY, true);
+                moved = true;
+
+                int[,] surrounding = findSurrounding(xPos, yPos, false);
+                for (int i = 0; i < 8; i++)
                 {
-                    List<int[]> freeSurrounding = new List<int[]>();
-                    for (int v = 0; v < 8; v++)
+                    if (surrounding[i, 0] == toX && surrounding[i, 1] == toY)
                     {
-                        if (!simSettings.usedBlocks[surrounding[v, 0], surrounding[v, 1]])
+                        List<int[]> freeSurrounding = new List<int[]>();
+                        for (int v = 0; v < 8; v++)
                         {
-                            freeSurrounding.Add(new int[] { surrounding[v, 0], surrounding[v, 1] });
+                            if (!simSettings.usedBlocks[surrounding[v, 0], surrounding[v, 1]] && simSettings.blockHeights[surrounding[v, 0], surrounding[v, 1]] >= 10)
+                            {
+                                freeSurrounding.Add(new int[] { surrounding[v, 0], surrounding[v, 1] });
+                            }
                         }
-                    }
-                    int[] childPosition = randomPicker(freeSurrounding);
-                    if (childPosition.Length > 0)
-                    {
-                        stat.rowdiness = 0;
-                        stat.energy -= stat.maxEnergy / 4f;
-                        GameObject newHeart = Instantiate(heart, transform.position, Quaternion.identity);
-                        newHeart.transform.parent = gameObject.transform.parent;
-                        GameObject child = Instantiate(selfObject, new Vector3(childPosition[0] + 0.5f, simSettings.blockHeights[childPosition[0], childPosition[1]], simSettings.terrainSize - childPosition[1] - 0.5f), Quaternion.identity);
-                        Animal script = child.GetComponent<Animal>();
-                        script.xPos = childPosition[0];
-                        script.yPos = childPosition[1];
-                        script.parentStats = new Stat[]
+                        int[] childPosition = randomPicker(freeSurrounding);
+                        if (childPosition.Length > 0)
                         {
+                            hasEaten = false;
+                            selves[index].GetComponent<Animal>().hasEaten = false;
+                            stat.rowdiness = 0;
+                            //stat.energy -= stat.maxEnergy / 4f;
+                            GameObject newHeart = Instantiate(heart, transform.position, Quaternion.identity);
+                            newHeart.transform.parent = gameObject.transform.parent;
+                            GameObject child = Instantiate(selfObject, new Vector3(childPosition[0] + 0.5f, simSettings.blockHeights[childPosition[0], childPosition[1]], simSettings.terrainSize - childPosition[1] - 0.5f), Quaternion.identity);
+                            Animal script = child.GetComponent<Animal>();
+                            script.xPos = childPosition[0];
+                            script.yPos = childPosition[1];
+                            script.parentStats = new Stat[]
+                            {
                                 stat,
-                                selves[0].GetComponent<Rabbit>().stat
-                        };
-                        script.isChild = true;
-                        simSettings.usedBlocks[childPosition[0], childPosition[1]] = true;
-                        child.transform.parent = gameObject.transform.parent.transform;
+                                selves[index].GetComponent<Animal>().stat
+                            };
+                            script.isChild = true;
+                            simSettings.usedBlocks[childPosition[0], childPosition[1]] = true;
+                            child.transform.parent = gameObject.transform.parent.transform;
+                        }
+                        break;
                     }
-                    break;
                 }
             }
+        }
+
+        // Eat The Closest Food
+        if (stat.energy < stat.maxEnergy / 2f && prey.Count > 0 && !moved && sustainableEating)
+        {
+            int index = findClosest(prey, false);
+            float toX = prey[index].transform.position.x - 0.5f;
+            float toY = simSettings.terrainSize - 0.5f - prey[index].transform.position.z;
+            moveTowards((int)toX, (int)toY, true);
+            moved = true;
         }
 
         // Randomely Move
@@ -190,9 +204,9 @@ public class Animal : MonoBehaviour
         }
 
         // Eat If Near Food
-        if(stat.energy < stat.maxEnergy / 2f && prey.Count > 0)
+        if(stat.energy < stat.maxEnergy / 2f && prey.Count > 0 && sustainableEating)
         {
-            int index = findClosest(prey);
+            int index = findClosest(prey, false);
             float toX = prey[index].transform.position.x - 0.5f;
             float toY = simSettings.terrainSize - 0.5f - prey[index].transform.position.z;
 
@@ -201,18 +215,27 @@ public class Animal : MonoBehaviour
             {
                 if (surrounding[i, 0] == toX && surrounding[i, 1] == toY)
                 {
-                    hasEaten = true;
-                    if (true)
+                    if (gameObject.tag == "rabbit")
                     {
                         prey[index].GetComponent<Plant>().eat();
+                        simSettings.usedBlocks[(int)toX, (int)toY] = false;
+                        prey.RemoveAt(index);
+                        stat.energy += 20;
+                        hasEaten = true;
                     }
                     else
                     {
-                        //TODO write damage thing
-                        //prey[0].GetComponent<Animal>().eat();
+                        Animal preyScript = prey[index].GetComponent<Animal>();
+                        preyScript.stat.health -= stat.size * 20f;
+                        if (preyScript.stat.health < 0)
+                        {
+                            //stat.energy = stat.maxEnergy;
+                            stat.energy += preyScript.stat.energy;
+                            preyScript.die();
+                            prey.RemoveAt(index);
+                            hasEaten = true;
+                        }
                     }
-                    prey.RemoveAt(index);
-                    stat.energy += 20;
                     if (stat.energy > stat.maxEnergy)
                     {
                         stat.energy = stat.maxEnergy;
@@ -304,7 +327,7 @@ public class Animal : MonoBehaviour
                     index = v;
                 }
             }
-            if (!simSettings.usedBlocks[notAdded[index][0], notAdded[index][1]])
+            if (!simSettings.usedBlocks[notAdded[index][0], notAdded[index][1]] && simSettings.blockHeights[notAdded[index][0], notAdded[index][1]] >= 10)
             {
                 priority.Add(notAdded[index]);
             }
@@ -383,7 +406,7 @@ public class Animal : MonoBehaviour
         return surroundingBlocks;
     }
 
-    int findClosest(List<GameObject> theObjects)
+    int findClosest(List<GameObject> theObjects, bool self)
     {
         float distance = Mathf.Infinity;
         int index = 0;
@@ -391,8 +414,19 @@ public class Animal : MonoBehaviour
         {
             if(findDistance(gameObject.transform.position.x, gameObject.transform.position.z, theObjects[i].transform.position.x, theObjects[i].transform.position.z) < distance)
             {
-                index = i;
-                distance = findDistance(gameObject.transform.position.x, gameObject.transform.position.z, theObjects[i].transform.position.x, theObjects[i].transform.position.z);
+                if (self)
+                {
+                    if (theObjects[i].GetComponent<Animal>().hasEaten)
+                    {
+                        index = i;
+                        distance = findDistance(gameObject.transform.position.x, gameObject.transform.position.z, theObjects[i].transform.position.x, theObjects[i].transform.position.z);
+                    }
+                }
+                else
+                {
+                    index = i;
+                    distance = findDistance(gameObject.transform.position.x, gameObject.transform.position.z, theObjects[i].transform.position.x, theObjects[i].transform.position.z);
+                }
             }
         }
         return index;
@@ -422,7 +456,7 @@ public class Animal : MonoBehaviour
 
     void checkStats()
     {
-        stat.energy -= stat.size * (stat.range / 4f);
+        stat.energy -= (1f / stat.size) + (stat.range / 10f);
         stat.rowdiness += stat.rowdinessMultiplier;
         if (stat.energy <= stat.maxEnergy / 5f)
         {
@@ -430,7 +464,7 @@ public class Animal : MonoBehaviour
         }
         else
         {
-            stat.health += 1;
+            stat.health += 2;
             if (stat.health > stat.maxHealth)
             {
                 stat.health = stat.maxHealth;
@@ -439,25 +473,24 @@ public class Animal : MonoBehaviour
 
         if (stat.age >= stat.maxAge)
         {
-            GameObject newSkull = Instantiate(skull, gameObject.transform.position, Quaternion.identity);
-            newSkull.transform.parent = gameObject.transform.parent;
-            simSettings.usedBlocks[xPos, yPos] = false;
-            Destroy(gameObject);
+            die();
         }
         if(stat.energy <= 0)
         {
-            GameObject newSkull = Instantiate(skull, gameObject.transform.position, Quaternion.identity);
-            newSkull.transform.parent = gameObject.transform.parent;
-            simSettings.usedBlocks[xPos, yPos] = false;
-            Destroy(gameObject);
+            die();
         }
         if (stat.health <= 0)
         {
-            GameObject newSkull = Instantiate(skull, gameObject.transform.position, Quaternion.identity);
-            newSkull.transform.parent = gameObject.transform.parent;
-            simSettings.usedBlocks[xPos, yPos] = false;
-            Destroy(gameObject);
+            die();
         }
+    }
+
+    public void die()
+    {
+        GameObject newSkull = Instantiate(skull, gameObject.transform.position, Quaternion.identity);
+        newSkull.transform.parent = gameObject.transform.parent;
+        simSettings.usedBlocks[xPos, yPos] = false;
+        Destroy(gameObject);
     }
 
     public IEnumerator tick()

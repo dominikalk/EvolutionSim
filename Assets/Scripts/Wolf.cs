@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Rabbit : Animal
+public class Wolf : Animal
 {
     // Start is called before the first frame update
     void Start()
@@ -13,13 +13,12 @@ public class Rabbit : Animal
         selves = new List<GameObject>();
         predators = new List<GameObject>();
 
-        hasEaten = false;
-
         setStatValues();
         GetComponent<SphereCollider>().radius = stat.range;
 
         StartCoroutine("tick");
         StartCoroutine("incrementAge");
+        StartCoroutine("checkSustainable");
     }
 
     // Update is called once per frame
@@ -30,33 +29,41 @@ public class Rabbit : Animal
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "plant")
+        if (other.tag == "fox")
         {
             prey.Add(other.gameObject);
         }
-        if (other.tag == "rabbit")
+        if (other.tag == "wolf")
         {
             selves.Add(other.gameObject);
-        }
-        if (other.tag == "wolf" || other.tag == "fox")
-        {
-            predators.Add(other.gameObject);
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.tag == "plant")
+        if (other.tag == "fox")
         {
             prey.Remove(other.gameObject);
         }
-        if (other.tag == "rabbit")
+        if (other.tag == "wolf")
         {
             selves.Remove(other.gameObject);
         }
-        if (other.tag == "wolf" || other.tag == "fox")
+    }
+
+    IEnumerator checkSustainable()
+    {
+        while (true)
         {
-            predators.Remove(other.gameObject);
+            yield return new WaitForSeconds(10);
+            if (simSettings.foxPop < 50)
+            {
+                sustainableEating = false;
+            }
+            else
+            {
+                sustainableEating = true;
+            }
         }
     }
 }

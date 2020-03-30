@@ -296,19 +296,14 @@ MonoBehaviour:
   terrainSize: 128
   objectThickness: 20
   evolMultplier: 5
-  rabbits: 2
-  foxes: 0
-  wolves: 0
+  rabbits: 400
+  foxes: 70
+  wolves: 20
   objectOffset: 0
   stage: 1
-  population: 0
-  maxAge: 0
-  maxEnergy: 0
-  maxHealth: 0
-  rowdiness: 0
-  speed: 0
-  size: 0
-  range: 0
+  rabbitPop: 0
+  foxPop: 0
+  wolfPop: 0
 --- !u!4 &377663393
 Transform:
   m_ObjectHideFlags: 0
@@ -1133,10 +1128,10 @@ RectTransform:
   m_Father: {fileID: 1680551783}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -227.5, y: -14.3}
-  m_SizeDelta: {x: 455, y: 378}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchoredPosition: {x: 212.5, y: -14.3}
+  m_SizeDelta: {x: 425.1, y: 378}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1542484925
 GameObject:
@@ -1438,6 +1433,7 @@ MonoBehaviour:
   - {fileID: 7947924437458571286, guid: 7df0fcca06550f54998d6b6a40cf5572, type: 3}
   - {fileID: 1668810138673702762, guid: 6b24e7229e220934a8947745a7cdc528, type: 3}
   - {fileID: 5815736610697454946, guid: ae1e6d066e89c404e92d23fdaca725c8, type: 3}
+  simSettings: {fileID: 0}
 --- !u!4 &2014492021
 Transform:
   m_ObjectHideFlags: 0

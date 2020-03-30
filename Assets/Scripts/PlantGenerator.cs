@@ -5,10 +5,12 @@ using UnityEngine;
 public class PlantGenerator : MonoBehaviour
 {
     public GameObject[] plants;
+    public SimSettings simSettings;
 
     // Start is called before the first frame update
     void Start()
     {
+        simSettings = FindObjectOfType<SimSettings>();
         StartCoroutine("spawnNewPlant");
     }
 
@@ -66,8 +68,11 @@ public class PlantGenerator : MonoBehaviour
     {
         while (true)
         {
-            yield return new WaitForSeconds(FindObjectOfType<SimSettings>().objectThickness / 2f);
-            GeneratePlants();
+            yield return new WaitForSeconds(FindObjectOfType<SimSettings>().objectThickness / 15f);
+            if (simSettings.rabbitPop > 0)
+            {
+                GeneratePlants();
+            }
         }
     }
 }

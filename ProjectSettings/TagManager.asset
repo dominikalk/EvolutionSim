@@ -6,8 +6,9 @@ TagManager:
   tags:
   - object
   - plant
-  - consumable
   - rabbit
+  - fox
+  - wolf
   layers:
   - Default
   - TransparentFX
