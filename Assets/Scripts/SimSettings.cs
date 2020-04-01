@@ -135,7 +135,7 @@ public class SimSettings: MonoBehaviour
             stage5 = true;
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) && stage == 5)
         {
             pausePanel.SetActive(true);
             populationButton.isOn = true;
@@ -172,10 +172,10 @@ public class SimSettings: MonoBehaviour
                 switch (recordingGraph)
                 {
                     case "Speed":
-                        rabbitOptionAverage += (1f / rabbitScripts[i].stat.speed) * 10f;
+                        rabbitOptionAverage += rabbitScripts[i].stat.speed;
                         break;
                     case "Size":
-                        rabbitOptionAverage += rabbitScripts[i].stat.size * 10f;
+                        rabbitOptionAverage += rabbitScripts[i].stat.size;
                         break;
                     case "Life Expectancy":
                         rabbitOptionAverage += rabbitScripts[i].stat.maxAge;
@@ -192,10 +192,10 @@ public class SimSettings: MonoBehaviour
                 switch (recordingGraph)
                 {
                     case "Speed":
-                        foxOptionAverage += (1f / foxScripts[i].stat.speed) * 10f;
+                        foxOptionAverage += foxScripts[i].stat.speed;
                         break;
                     case "Size":
-                        foxOptionAverage += foxScripts[i].stat.size * 10f;
+                        foxOptionAverage += foxScripts[i].stat.size;
                         break;
                     case "Life Expectancy":
                         foxOptionAverage += foxScripts[i].stat.maxAge;
@@ -212,10 +212,10 @@ public class SimSettings: MonoBehaviour
                 switch (recordingGraph)
                 {
                     case "Speed":
-                        wolfOptionAverage += (1f / wolfScripts[i].stat.speed) * 10f;
+                        wolfOptionAverage += wolfScripts[i].stat.speed;
                         break;
                     case "Size":
-                        wolfOptionAverage += wolfScripts[i].stat.size * 10f;
+                        wolfOptionAverage += wolfScripts[i].stat.size;
                         break;
                     case "Life Expectancy":
                         wolfOptionAverage += wolfScripts[i].stat.maxAge;
@@ -227,9 +227,24 @@ public class SimSettings: MonoBehaviour
             }
             wolfOptionAverage /= wolfScripts.Length;
 
-            rabbitOption.Add(rabbitOptionAverage);
-            foxOption.Add(foxOptionAverage);
-            wolfOption.Add(wolfOptionAverage);
+            switch (recordingGraph)
+            {
+                case "Speed":
+                    rabbitOption.Add((1f / rabbitOptionAverage) * 10f);
+                    foxOption.Add((1f / foxOptionAverage) * 10f);
+                    wolfOption.Add((1f / wolfOptionAverage) * 10f);
+                    break;
+                case "Size":
+                    rabbitOption.Add(rabbitOptionAverage * 10f);
+                    foxOption.Add(foxOptionAverage * 10f);
+                    wolfOption.Add(wolfOptionAverage * 10f);
+                    break;
+                default:
+                    rabbitOption.Add(rabbitOptionAverage);
+                    foxOption.Add(foxOptionAverage);
+                    wolfOption.Add(wolfOptionAverage);
+                    break;
+            }
         }
     }
 
@@ -297,3 +312,10 @@ public class SimSettings: MonoBehaviour
         SceneManager.LoadScene("MainMenu");
     }
 }
+
+/*
+ Issues:
+  - float was too large so gave infinity so ui hade to have an extra switch case statement
+     
+     
+     */

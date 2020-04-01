@@ -69,8 +69,11 @@ public class PlantGenerator : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(FindObjectOfType<SimSettings>().objectThickness / 15f);
-            GeneratePlants();
-            
+
+            if(simSettings.rabbitPop.Count > 0 && simSettings.rabbitPop[simSettings.rabbitPop.Count - 1] > 0)
+            {
+                GeneratePlants();
+            }
         }
     }
 }

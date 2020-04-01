@@ -13,12 +13,18 @@ public class CameraController : MonoBehaviour
     float yaw = 0f;
     float pitch = 0f;
 
+    float initX;
+    float initY;
+
     // Start is called before the first frame update
     void Start()
     {
         myRigid = GetComponent<Rigidbody>();
-        transform.rotation = Quaternion.Euler(90, 0, 0);
         simSettings = FindObjectOfType<SimSettings>();
+        initX = transform.eulerAngles.x;
+        initY = transform.eulerAngles.y;
+        pitch += initX;
+        yaw += initY;
     }
 
     // Update is called once per frame
@@ -34,9 +40,9 @@ public class CameraController : MonoBehaviour
         }
         else
         {
+            transform.eulerAngles = new Vector3(pitch, yaw, 0f);
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
-            //transform.eulerAngles = new Vector3(transform.rotation.x, transform.rotation.y, transform.rotation.z);
         }
 
         if (Input.GetKey(KeyCode.W))
