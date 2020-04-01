@@ -18,7 +18,6 @@ public class Fox : Animal
 
         StartCoroutine("tick");
         StartCoroutine("incrementAge");
-        StartCoroutine("checkSustainable");
     }
 
     // Update is called once per frame
@@ -56,22 +55,6 @@ public class Fox : Animal
         if (other.tag == "wolf")
         {
             predators.Remove(other.gameObject);
-        }
-    }
-
-    IEnumerator checkSustainable()
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(10);
-            if (simSettings.rabbitPop < 100)
-            {
-                sustainableEating = false;
-            }
-            else
-            {
-                sustainableEating = true;
-            }
         }
     }
 }

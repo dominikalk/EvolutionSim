@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class PlantGenerator : MonoBehaviour
 {
-    public GameObject[] plants;
-    public SimSettings simSettings;
+    [SerializeField] GameObject[] plants;
+    SimSettings simSettings;
 
     // Start is called before the first frame update
     void Start()
     {
         simSettings = FindObjectOfType<SimSettings>();
-        StartCoroutine("spawnNewPlant");
+        //StartCoroutine("spawnNewPlant");
     }
 
     // Update is called once per frame
@@ -64,15 +64,15 @@ public class PlantGenerator : MonoBehaviour
         }
     }
 
-    IEnumerator spawnNewPlant()
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(FindObjectOfType<SimSettings>().objectThickness / 15f);
-            if (simSettings.rabbitPop > 0)
-            {
-                GeneratePlants();
-            }
-        }
-    }
+    //IEnumerator spawnNewPlant()
+    //{
+        //while (true)
+        //{
+            //yield return new WaitForSeconds(FindObjectOfType<SimSettings>().objectThickness / 15f);
+            //if (simSettings.rabbitPop[simSettings.rabbitPop.Count - 1] > 0)
+            //{
+            //    GeneratePlants();
+            //}
+        //}
+    //}
 }

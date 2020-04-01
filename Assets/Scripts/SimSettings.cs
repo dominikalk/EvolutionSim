@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class SimSettings: MonoBehaviour
 {
@@ -19,27 +20,34 @@ public class SimSettings: MonoBehaviour
     public int objectOffset;
     public bool[,] usedBlocks;
     public float[,] blockHeights;
-    public int stage = 0;
+    public int stage;
     bool stage1;
     bool stage2;
     bool stage3;
     bool stage4;
     bool stage5;
 
-    public float rabbitPop;
-    public float foxPop;
-    public float wolfPop;
+    public List<float> rabbitPop;
+    public List<float> foxPop;
+    public List<float> wolfPop;
 
-    public GameObject settingsPanel;
-    public GameObject numbersPanel;
-    public Text rabbitText;
-    public Text foxText;
-    public Text wolfText;
-    public Text loadingText;
-    public GameObject loadingPanel;
-    public Slider loadingSlider;
-    public GameObject pausePanel;
-    public Slider timeSlider;
+    public List<float> rabbitOption;
+    public List<float> foxOption;
+    public List<float> wolfOption;
+
+    [SerializeField] GameObject settingsPanel;
+    [SerializeField] GameObject numbersPanel;
+    [SerializeField] Text rabbitText;
+    [SerializeField] Text foxText;
+    [SerializeField] Text wolfText;
+    [SerializeField] Text loadingText;
+    [SerializeField] GameObject loadingPanel;
+    [SerializeField] Slider loadingSlider;
+    [SerializeField] GameObject pausePanel;
+    [SerializeField] Slider timeSlider;
+
+    [SerializeField] GameObject graph;
+    [SerializeField] Text optionButton;
 
     public bool lockedScreen;
 
@@ -80,7 +88,7 @@ public class SimSettings: MonoBehaviour
         terrainSize = 128;
         objectThickness = 20;
         evolMultplier = 1;
-        recordingGraph = "speed";
+        recordingGraph = "Speed";
         renderQuality = 2;
     }
 
@@ -121,6 +129,7 @@ public class SimSettings: MonoBehaviour
         {
             lockedScreen = true;
             loadingPanel.SetActive(false);
+            optionButton.text = recordingGraph;
             Time.timeScale = 1;
             stage5 = true;
         }
@@ -128,6 +137,11 @@ public class SimSettings: MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             pausePanel.SetActive(true);
+            Graph graphScript = graph.GetComponent<Graph>();
+            graphScript.rabbitList = rabbitPop;
+            graphScript.foxList = foxPop;
+            graphScript.wolfList = wolfPop;
+            graphScript.ShowGraph();
             Time.timeScale = 0;
             lockedScreen = false;
         }
@@ -139,9 +153,81 @@ public class SimSettings: MonoBehaviour
         {
             yield return new WaitForSeconds(10);
 
-            rabbitPop = FindObjectsOfType<Rabbit>().Length;
-            foxPop = FindObjectsOfType<Fox>().Length;
-            wolfPop = FindObjectsOfType<Wolf>().Length;
+            Rabbit[] rabbitScripts = FindObjectsOfType<Rabbit>();
+            Fox[] foxScripts = FindObjectsOfType<Fox>();
+            Wolf[] wolfScripts = FindObjectsOfType<Wolf>();
+
+            rabbitPop.Add(rabbitScripts.Length);
+            foxPop.Add(foxScripts.Length);
+            wolfPop.Add(wolfScripts.Length);
+
+            float rabbitOptionAverage = 0;
+            float foxOptionAverage = 0;
+            float wolfOptionAverage = 0;
+
+            for (int i = 0; i < rabbitScripts.Length; i++)
+            {
+                switch (recordingGraph)
+                {
+                    case "Speed":
+                        rabbitOptionAverage += rabbitScripts[i].stat.speed;
+                        break;
+                    case "Size":
+                        rabbitOptionAverage += rabbitScripts[i].stat.size;
+                        break;
+                    case "Life Expectancy":
+                        rabbitOptionAverage += rabbitScripts[i].stat.maxAge;
+                        break;
+                    case "Range":
+                        rabbitOptionAverage += rabbitScripts[i].stat.range;
+                        break;
+                }
+            }
+            rabbitOptionAverage /= rabbitScripts.Length;
+
+            for (int i = 0; i < foxScripts.Length; i++)
+            {
+                switch (recordingGraph)
+                {
+                    case "Speed":
+                        foxOptionAverage += foxScripts[i].stat.speed;
+                        break;
+                    case "Size":
+                        foxOptionAverage += foxScripts[i].stat.size;
+                        break;
+                    case "Life Expectancy":
+                        foxOptionAverage += foxScripts[i].stat.maxAge;
+                        break;
+                    case "Range":
+                        foxOptionAverage += foxScripts[i].stat.range;
+                        break;
+                }
+            }
+            foxOptionAverage /= foxScripts.Length;
+
+            for (int i = 0; i < wolfScripts.Length; i++)
+            {
+                switch (recordingGraph)
+                {
+                    case "Speed":
+                        wolfOptionAverage += wolfScripts[i].stat.speed;
+                        break;
+                    case "Size":
+                        wolfOptionAverage += wolfScripts[i].stat.size;
+                        break;
+                    case "Life Expectancy":
+                        wolfOptionAverage += wolfScripts[i].stat.maxAge;
+                        break;
+                    case "Range":
+                        wolfOptionAverage += wolfScripts[i].stat.range;
+                        break;
+                }
+            }
+            wolfOptionAverage /= wolfScripts.Length;
+
+            rabbitOption.Add(rabbitOptionAverage);
+            foxOption.Add(foxOptionAverage);
+            wolfOption.Add(wolfOptionAverage);
         }
     }
 
@@ -197,5 +283,10 @@ public class SimSettings: MonoBehaviour
         Time.timeScale = timeSlider.value;
         pausePanel.SetActive(false);
         lockedScreen = true;
+    }
+
+    public void resetSimulation()
+    {
+        SceneManager.LoadScene("Simulation");
     }
 }

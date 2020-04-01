@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ObjectGenerator : MonoBehaviour
 {
-    public GameObject[] objects;
+    [SerializeField] GameObject[] objects;
     public Vector3[] vertices;
 
     // Start is called before the first frame update

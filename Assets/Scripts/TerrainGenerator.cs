@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class TerrainGenerator : MonoBehaviour
 {
-    public Gradient gradient;
-    public GameObject water;
+    [SerializeField] Gradient gradient;
+    [SerializeField] GameObject water;
     int terrainSize;
 
     // Start is called before the first frame update

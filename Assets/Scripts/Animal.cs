@@ -19,7 +19,7 @@ public class Stat
 
 public class Animal : MonoBehaviour
 {
-    public GameObject selfObject;
+    [SerializeField] GameObject selfObject;
     public List<GameObject> prey;
     public List<GameObject> selves;
     public List<GameObject> predators;
@@ -37,16 +37,14 @@ public class Animal : MonoBehaviour
     public bool hasEaten = false;
 
     public SimSettings simSettings;
-    public GameObject skull;
-    public GameObject heart;
+    [SerializeField] GameObject skull;
+    [SerializeField] GameObject heart;
 
     bool moving;
     Vector3 startPos;
     Vector3 endPos;
     float trajectoryHeight = 1;
     float incrementor = 0;
-
-    public bool sustainableEating = true;
 
     //TODO recheck height onsistancy
 
@@ -188,7 +186,7 @@ public class Animal : MonoBehaviour
         }
 
         // Eat The Closest Food
-        if (stat.energy < stat.maxEnergy / 2f && prey.Count > 0 && !moved && sustainableEating)
+        if (stat.energy < stat.maxEnergy / 2f && prey.Count > 0 && !moved)
         {
             int index = findClosest(prey, false);
             float toX = prey[index].transform.position.x - 0.5f;
@@ -204,7 +202,7 @@ public class Animal : MonoBehaviour
         }
 
         // Eat If Near Food
-        if(stat.energy < stat.maxEnergy / 2f && prey.Count > 0 && sustainableEating)
+        if(stat.energy < stat.maxEnergy / 2f && prey.Count > 0)
         {
             int index = findClosest(prey, false);
             float toX = prey[index].transform.position.x - 0.5f;

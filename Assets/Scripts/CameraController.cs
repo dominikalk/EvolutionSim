@@ -7,8 +7,8 @@ public class CameraController : MonoBehaviour
     Rigidbody myRigid;
     SimSettings simSettings;
 
-    public float speed = 100f;
-    public float rotSpeed = 2;
+    [SerializeField] float speed = 100f;
+    [SerializeField] float rotSpeed = 2;
 
     float yaw = 0f;
     float pitch = 0f;
