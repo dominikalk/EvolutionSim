@@ -158,7 +158,7 @@ public class Graph : MonoBehaviour
                 labelY.gameObject.SetActive(true);
                 float yHeightNorm = ((float)i / separatorCount);
                 labelY.anchoredPosition = new Vector2(-3f, yHeightNorm * graphHeight);
-                labelY.GetComponent<Text>().text = (Mathf.Round(yHeightNorm * yMax)).ToString();
+                labelY.GetComponent<Text>().text = (roundToSF(yHeightNorm * yMax, 3)).ToString();
 
                 RectTransform dashY = Instantiate(dashTemplateX);
                 dashY.SetParent(graphContainer);
@@ -179,14 +179,14 @@ public class Graph : MonoBehaviour
     void CreateLineGraph(List<float> popList, int i, float xSize, float xPos, float yMax, float graphHeight, ref GameObject lastCircleGameObject, Color color)
     {
         float yPos = (popList[i] / yMax) * graphHeight;
-        string textHeight = popList[i].ToString();
+        float textHeight = popList[i];
         GameObject circleGameObject = CreateCircle(new Vector2(xPos, yPos));
         circleGameObject.GetComponent<Image>().color = new Color(color.r, color.g, color.b, 1f);
 
         EventTrigger.Entry mouseOver = new EventTrigger.Entry();
         mouseOver.eventID = EventTriggerType.PointerEnter;
         mouseOver.callback.RemoveAllListeners();
-        mouseOver.callback.AddListener((eventData) => { ShowToolTip(textHeight, new Vector2(xPos, yPos)); });
+        mouseOver.callback.AddListener((eventData) => { ShowToolTip(roundToSF(textHeight, 3).ToString(), new Vector2(xPos, yPos)); });
 
         EventTrigger.Entry mouseExit = new EventTrigger.Entry();
         mouseExit.eventID = EventTriggerType.PointerExit;
@@ -222,9 +222,32 @@ public class Graph : MonoBehaviour
         return line;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void populationClicked()
     {
-        
+        SimSettings simSettings = FindObjectOfType<SimSettings>();
+        rabbitList = simSettings.rabbitPop;
+        foxList = simSettings.foxPop;
+        wolfList = simSettings.wolfPop;
+        ShowGraph();
+    }
+
+    public void optionClicked()
+    {
+        SimSettings simSettings = FindObjectOfType<SimSettings>();
+        rabbitList = simSettings.rabbitOption;
+        foxList = simSettings.foxOption;
+        wolfList = simSettings.wolfOption;
+        ShowGraph();
+    }
+
+    float roundToSF(float d, int digits)
+    {
+        if (d == 0)
+        {
+            return 0;
+        }
+
+        float scale = (float)Mathf.Pow(10, Mathf.Floor(Mathf.Log10(Mathf.Abs(d))) + 1);
+        return scale * (Mathf.Round(d / scale * Mathf.Pow(10f, digits)) / Mathf.Pow(10f, digits));
     }
 }

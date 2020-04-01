@@ -47,7 +47,8 @@ public class SimSettings: MonoBehaviour
     [SerializeField] Slider timeSlider;
 
     [SerializeField] GameObject graph;
-    [SerializeField] Text optionButton;
+    [SerializeField] Text optionText;
+    [SerializeField] Toggle populationButton;
 
     public bool lockedScreen;
 
@@ -62,7 +63,7 @@ public class SimSettings: MonoBehaviour
 
     public Stat defaultFoxStat = new Stat()
     {
-        speed = 0.75f,
+        speed = 0.5f,
         size = 2,
         rowdinessMultiplier = 20,
         maxAge = 5,
@@ -71,7 +72,7 @@ public class SimSettings: MonoBehaviour
 
     public Stat defaultWolfStat = new Stat()
     {
-        speed = 0.6f,
+        speed = 0.75f,
         size = 3,
         rowdinessMultiplier = 20,
         maxAge = 8,
@@ -129,7 +130,7 @@ public class SimSettings: MonoBehaviour
         {
             lockedScreen = true;
             loadingPanel.SetActive(false);
-            optionButton.text = recordingGraph;
+            optionText.text = recordingGraph;
             Time.timeScale = 1;
             stage5 = true;
         }
@@ -137,6 +138,7 @@ public class SimSettings: MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             pausePanel.SetActive(true);
+            populationButton.isOn = true;
             Graph graphScript = graph.GetComponent<Graph>();
             graphScript.rabbitList = rabbitPop;
             graphScript.foxList = foxPop;
@@ -170,10 +172,10 @@ public class SimSettings: MonoBehaviour
                 switch (recordingGraph)
                 {
                     case "Speed":
-                        rabbitOptionAverage += rabbitScripts[i].stat.speed;
+                        rabbitOptionAverage += (1f / rabbitScripts[i].stat.speed) * 10f;
                         break;
                     case "Size":
-                        rabbitOptionAverage += rabbitScripts[i].stat.size;
+                        rabbitOptionAverage += rabbitScripts[i].stat.size * 10f;
                         break;
                     case "Life Expectancy":
                         rabbitOptionAverage += rabbitScripts[i].stat.maxAge;
@@ -190,10 +192,10 @@ public class SimSettings: MonoBehaviour
                 switch (recordingGraph)
                 {
                     case "Speed":
-                        foxOptionAverage += foxScripts[i].stat.speed;
+                        foxOptionAverage += (1f / foxScripts[i].stat.speed) * 10f;
                         break;
                     case "Size":
-                        foxOptionAverage += foxScripts[i].stat.size;
+                        foxOptionAverage += foxScripts[i].stat.size * 10f;
                         break;
                     case "Life Expectancy":
                         foxOptionAverage += foxScripts[i].stat.maxAge;
@@ -210,10 +212,10 @@ public class SimSettings: MonoBehaviour
                 switch (recordingGraph)
                 {
                     case "Speed":
-                        wolfOptionAverage += wolfScripts[i].stat.speed;
+                        wolfOptionAverage += (1f / wolfScripts[i].stat.speed) * 10f;
                         break;
                     case "Size":
-                        wolfOptionAverage += wolfScripts[i].stat.size;
+                        wolfOptionAverage += wolfScripts[i].stat.size * 10f;
                         break;
                     case "Life Expectancy":
                         wolfOptionAverage += wolfScripts[i].stat.maxAge;
@@ -288,5 +290,10 @@ public class SimSettings: MonoBehaviour
     public void resetSimulation()
     {
         SceneManager.LoadScene("Simulation");
+    }
+
+    public void menuClicked()
+    {
+        SceneManager.LoadScene("MainMenu");
     }
 }

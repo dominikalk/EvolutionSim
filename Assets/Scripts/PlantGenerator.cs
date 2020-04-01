@@ -11,7 +11,7 @@ public class PlantGenerator : MonoBehaviour
     void Start()
     {
         simSettings = FindObjectOfType<SimSettings>();
-        //StartCoroutine("spawnNewPlant");
+        StartCoroutine("spawnNewPlant");
     }
 
     // Update is called once per frame
@@ -64,15 +64,13 @@ public class PlantGenerator : MonoBehaviour
         }
     }
 
-    //IEnumerator spawnNewPlant()
-    //{
-        //while (true)
-        //{
-            //yield return new WaitForSeconds(FindObjectOfType<SimSettings>().objectThickness / 15f);
-            //if (simSettings.rabbitPop[simSettings.rabbitPop.Count - 1] > 0)
-            //{
-            //    GeneratePlants();
-            //}
-        //}
-    //}
+    IEnumerator spawnNewPlant()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(FindObjectOfType<SimSettings>().objectThickness / 15f);
+            GeneratePlants();
+            
+        }
+    }
 }
