@@ -255,13 +255,22 @@ public class SimSettings: MonoBehaviour
             rabbits = int.Parse(rabbitText.text);
             foxes = int.Parse(foxText.text);
             wolves = int.Parse(wolfText.text);
-            settingsPanel.SetActive(false);
-            QualitySettings.SetQualityLevel(renderQuality, true);
-            stage = 1;
+            if(rabbits + foxes + wolves > 2000)
+            {
+                numbersPanel.SetActive(true);
+                numbersPanel.transform.Find("NumbersPanel/Text").GetComponent<Text>().text = "You cannot generate more than 2000 animals";
+            }
+            else
+            {
+                settingsPanel.SetActive(false);
+                QualitySettings.SetQualityLevel(renderQuality, true);
+                stage = 1;
+            }
         }
         catch
         {
             numbersPanel.SetActive(true);
+            numbersPanel.transform.Find("NumbersPanel/Text").GetComponent<Text>().text = "Animal Quantity must be a whole number and contain only digits";
         }
     }
 
