@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3386808758986069564}
   m_Layer: 0
   m_Name: Fox
-  m_TagString: fox
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -31,6 +31,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5400408226832529199}
+  - {fileID: 6638396921424646501}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -82,11 +83,55 @@ MonoBehaviour:
   xPos: 0
   yPos: 0
   isChild: 0
-  isRabbit: 0
   hasEaten: 0
   simSettings: {fileID: 0}
   skull: {fileID: 3341896045655671534, guid: 2166c619ddd44c344bcd54e4d90ce76e, type: 3}
   heart: {fileID: 3965690242672755483, guid: fdda5f0f4aeb17e4586b28ffa36ad9b3, type: 3}
+--- !u!1 &6315655341370430250
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6638396921424646501}
+  - component: {fileID: 8167475698262883235}
+  m_Layer: 0
+  m_Name: Trigger
+  m_TagString: fox
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6638396921424646501
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6315655341370430250}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 7291052230579533563}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &8167475698262883235
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6315655341370430250}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 0.1
+  m_Height: 0.76
+  m_Direction: 2
+  m_Center: {x: 0, y: 0.23, z: -0.03}
 --- !u!1001 &1119336260308737077
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -102,7 +147,7 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: 42948b21f42a32f47943de9db5fda61e,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 42948b21f42a32f47943de9db5fda61e,
         type: 3}
@@ -112,7 +157,7 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: 42948b21f42a32f47943de9db5fda61e,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 42948b21f42a32f47943de9db5fda61e,
         type: 3}

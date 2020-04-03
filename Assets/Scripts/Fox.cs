@@ -30,15 +30,15 @@ public class Fox : Animal
     {
         if (other.tag == "rabbit")
         {
-            prey.Add(other.gameObject);
+            prey.Add(other.gameObject.transform.parent.gameObject);
         }
         if (other.tag == "fox")
         {
-            selves.Add(other.gameObject);
+            selves.Add(other.gameObject.transform.parent.gameObject);
         }
         if (other.tag == "wolf")
         {
-            predators.Add(other.gameObject);
+            predators.Add(other.gameObject.transform.parent.gameObject);
         }
     }
 
@@ -46,15 +46,15 @@ public class Fox : Animal
     {
         if (other.tag == "rabbit")
         {
-            prey.Remove(other.gameObject);
+            prey.Remove(other.gameObject.transform.parent.gameObject);
         }
         if (other.tag == "fox")
         {
-            selves.Remove(other.gameObject);
+            selves.Remove(other.gameObject.transform.parent.gameObject);
         }
         if (other.tag == "wolf")
         {
-            predators.Remove(other.gameObject);
+            predators.Remove(other.gameObject.transform.parent.gameObject);
         }
     }
 }

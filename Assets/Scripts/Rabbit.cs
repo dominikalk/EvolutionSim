@@ -36,11 +36,11 @@ public class Rabbit : Animal
         }
         if (other.tag == "rabbit")
         {
-            selves.Add(other.gameObject);
+            selves.Add(other.gameObject.transform.parent.gameObject);
         }
         if (other.tag == "wolf" || other.tag == "fox")
         {
-            predators.Add(other.gameObject);
+            predators.Add(other.gameObject.transform.parent.gameObject);
         }
     }
 
@@ -52,11 +52,11 @@ public class Rabbit : Animal
         }
         if (other.tag == "rabbit")
         {
-            selves.Remove(other.gameObject);
+            selves.Remove(other.gameObject.transform.parent.gameObject);
         }
         if (other.tag == "wolf" || other.tag == "fox")
         {
-            predators.Remove(other.gameObject);
+            predators.Remove(other.gameObject.transform.parent.gameObject);
         }
     }
 }

@@ -54,7 +54,7 @@ public class Animal : MonoBehaviour
         {
             incrementor += (1f / stat.speed) * (1f / 0.5f) * Time.deltaTime;
             Vector3 currentPos = Vector3.Lerp(startPos, endPos, incrementor);
-            if (gameObject.tag == "rabbit")
+            if (gameObject.transform.Find("Trigger").gameObject.tag == "rabbit")
             {
                 currentPos.y += trajectoryHeight * Mathf.Sin(Mathf.Clamp01(incrementor) * Mathf.PI);
             }
@@ -213,7 +213,7 @@ public class Animal : MonoBehaviour
             {
                 if (surrounding[i, 0] == toX && surrounding[i, 1] == toY)
                 {
-                    if (gameObject.tag == "rabbit")
+                    if (gameObject.transform.Find("Trigger").gameObject.tag == "rabbit")
                     {
                         prey[index].GetComponent<Plant>().eat();
                         simSettings.usedBlocks[(int)toX, (int)toY] = false;

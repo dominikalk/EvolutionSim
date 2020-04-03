@@ -30,11 +30,11 @@ public class Wolf : Animal
     {
         if (other.tag == "fox")
         {
-            prey.Add(other.gameObject);
+            prey.Add(other.gameObject.transform.parent.gameObject);
         }
         if (other.tag == "wolf")
         {
-            selves.Add(other.gameObject);
+            selves.Add(other.gameObject.transform.parent.gameObject);
         }
     }
 
@@ -42,11 +42,11 @@ public class Wolf : Animal
     {
         if (other.tag == "fox")
         {
-            prey.Remove(other.gameObject);
+            prey.Remove(other.gameObject.transform.parent.gameObject);
         }
         if (other.tag == "wolf")
         {
-            selves.Remove(other.gameObject);
+            selves.Remove(other.gameObject.transform.parent.gameObject);
         }
     }
 }

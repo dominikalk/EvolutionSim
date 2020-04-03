@@ -27,6 +27,8 @@ public class SimSettings: MonoBehaviour
     bool stage4;
     bool stage5;
 
+    bool paused;
+
     public List<float> rabbitPop;
     public List<float> foxPop;
     public List<float> wolfPop;
@@ -45,10 +47,14 @@ public class SimSettings: MonoBehaviour
     [SerializeField] Slider loadingSlider;
     [SerializeField] GameObject pausePanel;
     [SerializeField] Slider timeSlider;
+    [SerializeField] Slider volumeSlider;
+    [SerializeField] Toggle volumeToggle;
 
     [SerializeField] GameObject graph;
     [SerializeField] Text optionText;
     [SerializeField] Toggle populationButton;
+
+    [SerializeField] GameObject populationCorner;
 
     public bool lockedScreen;
 
@@ -84,13 +90,18 @@ public class SimSettings: MonoBehaviour
     {
         objectOffset = Random.Range(0, 100);
         Time.timeScale = 0;
-        StartCoroutine("checkAverage");
         stage = 0;
         terrainSize = 128;
         objectThickness = 20;
         evolMultplier = 1;
         recordingGraph = "Speed";
         renderQuality = 2;
+        MusicController music = FindObjectOfType<MusicController>();
+        volumeSlider.value = music.audioSource.volume;
+        if(music.audioSource.volume == 0)
+        {
+            volumeToggle.isOn = true;
+        }
     }
 
     // Update is called once per frame
@@ -130,15 +141,19 @@ public class SimSettings: MonoBehaviour
         {
             lockedScreen = true;
             loadingPanel.SetActive(false);
+            populationCorner.SetActive(true);
             optionText.text = recordingGraph;
             Time.timeScale = 1;
+            StartCoroutine("checkAverage");
             stage5 = true;
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape) && stage == 5)
+        if (Input.GetKeyDown(KeyCode.Escape) && stage == 5 && !paused)
         {
+            paused = true;
             pausePanel.SetActive(true);
             populationButton.isOn = true;
+            populationCorner.SetActive(false);
             Graph graphScript = graph.GetComponent<Graph>();
             graphScript.rabbitList = rabbitPop;
             graphScript.foxList = foxPop;
@@ -147,14 +162,17 @@ public class SimSettings: MonoBehaviour
             Time.timeScale = 0;
             lockedScreen = false;
         }
+
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            muteClicked();
+        }
     }
 
     IEnumerator checkAverage()
     {
         while (true)
         {
-            yield return new WaitForSeconds(10);
-
             Rabbit[] rabbitScripts = FindObjectsOfType<Rabbit>();
             Fox[] foxScripts = FindObjectsOfType<Fox>();
             Wolf[] wolfScripts = FindObjectsOfType<Wolf>();
@@ -162,6 +180,10 @@ public class SimSettings: MonoBehaviour
             rabbitPop.Add(rabbitScripts.Length);
             foxPop.Add(foxScripts.Length);
             wolfPop.Add(wolfScripts.Length);
+
+            populationCorner.transform.Find("RabbitText").GetComponent<Text>().text = "Rabbits: " + rabbitScripts.Length;
+            populationCorner.transform.Find("FoxText").GetComponent<Text>().text = "Foxes: " + foxScripts.Length;
+            populationCorner.transform.Find("WolfText").GetComponent<Text>().text = "Wolves: " + wolfScripts.Length;
 
             float rabbitOptionAverage = 0;
             float foxOptionAverage = 0;
@@ -245,6 +267,8 @@ public class SimSettings: MonoBehaviour
                     wolfOption.Add(wolfOptionAverage);
                     break;
             }
+
+            yield return new WaitForSeconds(10);
         }
     }
 
@@ -255,10 +279,10 @@ public class SimSettings: MonoBehaviour
             rabbits = int.Parse(rabbitText.text);
             foxes = int.Parse(foxText.text);
             wolves = int.Parse(wolfText.text);
-            if(rabbits + foxes + wolves > 2000)
+            if(rabbits + foxes + wolves > 1500)
             {
                 numbersPanel.SetActive(true);
-                numbersPanel.transform.Find("NumbersPanel/Text").GetComponent<Text>().text = "You cannot generate more than 2000 animals";
+                numbersPanel.transform.Find("NumbersPanel/Text").GetComponent<Text>().text = "You cannot generate more than 1500 animals";
             }
             else
             {
@@ -307,6 +331,8 @@ public class SimSettings: MonoBehaviour
     public void resumeClicked()
     {
         Time.timeScale = timeSlider.value;
+        paused = false;
+        populationCorner.SetActive(true);
         pausePanel.SetActive(false);
         lockedScreen = true;
     }
@@ -319,6 +345,35 @@ public class SimSettings: MonoBehaviour
     public void menuClicked()
     {
         SceneManager.LoadScene("MainMenu");
+    }
+
+    public void muteClicked()
+    {
+        MusicController music = FindObjectOfType<MusicController>();
+        if (music.audioSource.volume == 0)
+        {
+            music.audioSource.volume = 1;
+            volumeSlider.value = 1;
+        }
+        else
+        {
+            music.audioSource.volume = 0;
+            volumeSlider.value = 0;
+        }
+    }
+
+    public void volumeChanged()
+    {
+        MusicController music = FindObjectOfType<MusicController>();
+        if (volumeSlider.value == 0)
+        {
+            volumeToggle.isOn = true;
+        }
+        else
+        {
+            volumeToggle.isOn = false;
+        }
+        music.audioSource.volume = volumeSlider.value;
     }
 }
 

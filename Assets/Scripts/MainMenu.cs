@@ -5,6 +5,9 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
+    [SerializeField] GameObject infoPanel;
+    [SerializeField] GameObject instPanel;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -25,5 +28,29 @@ public class MainMenu : MonoBehaviour
     public void quitClicked()
     {
         Application.Quit();
+    }
+
+    public void infoEnter(bool isInst)
+    {
+        if (isInst)
+        {
+            instPanel.SetActive(true);
+        }
+        else
+        {
+            infoPanel.SetActive(true);
+        }
+    }
+
+    public void infoExit(bool isInst)
+    {
+        if(isInst)
+        {
+            instPanel.SetActive(false);
+        }
+        else
+        {
+            infoPanel.SetActive(false);
+        }
     }
 }

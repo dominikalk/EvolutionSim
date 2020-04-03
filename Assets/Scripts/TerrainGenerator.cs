@@ -156,6 +156,10 @@ public class TerrainGenerator : MonoBehaviour
 
         gameObject.transform.position = new Vector3(terrainSize / 2, 0f, terrainSize / 2);
         water.transform.position = new Vector3(terrainSize / 2, 9f, terrainSize / 2);
+        if(terrainSize == 128)
+        {
+            water.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+        }
         simsettings.stage += 1;
     }
 
