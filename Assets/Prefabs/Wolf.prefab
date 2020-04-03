@@ -57,6 +57,7 @@ GameObject:
   - component: {fileID: 6224512169350675087}
   - component: {fileID: 691476522235415759}
   - component: {fileID: 5645262095167523631}
+  - component: {fileID: 7557607340011721348}
   m_Layer: 0
   m_Name: Wolf
   m_TagString: Untagged
@@ -132,6 +133,25 @@ MonoBehaviour:
   simSettings: {fileID: 0}
   skull: {fileID: 3341896045655671534, guid: 2166c619ddd44c344bcd54e4d90ce76e, type: 3}
   heart: {fileID: 3965690242672755483, guid: fdda5f0f4aeb17e4586b28ffa36ad9b3, type: 3}
+--- !u!95 &7557607340011721348
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7075068466814216613}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 946c0a77a3fd5a145b02e1e0d15a3f6c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1001 &7075068468651015035
 PrefabInstance:
   m_ObjectHideFlags: 0
