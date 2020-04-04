@@ -139,6 +139,7 @@ public class Graph : MonoBehaviour
                     labelX.gameObject.SetActive(true);
                     labelX.anchoredPosition = new Vector2(xPos, -3f);
                     labelX.GetComponent<Text>().text = "Day " + i.ToString();
+                    labelX.localScale = new Vector3(1, 1, 1);
 
                     RectTransform dashX = Instantiate(dashTemplateY);
                     dashX.SetParent(graphContainer);
@@ -159,6 +160,7 @@ public class Graph : MonoBehaviour
                 float yHeightNorm = ((float)i / separatorCount);
                 labelY.anchoredPosition = new Vector2(-3f, yHeightNorm * graphHeight);
                 labelY.GetComponent<Text>().text = (roundToSF(yHeightNorm * yMax, 3)).ToString();
+                labelY.localScale = new Vector3(1, 1, 1);
 
                 RectTransform dashY = Instantiate(dashTemplateX);
                 dashY.SetParent(graphContainer);
