@@ -15,9 +15,11 @@ public class Fox : Animal
 
         setStatValues();
         GetComponent<SphereCollider>().radius = stat.range;
+        mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
 
         StartCoroutine("tick");
         StartCoroutine("incrementAge");
+        StartCoroutine("checkCamera");
     }
 
     // Update is called once per frame
@@ -28,7 +30,7 @@ public class Fox : Animal
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "rabbit")
+        if (other.tag == "rabbit" && simSettings.rabbitPop.Count > 0 && simSettings.foxPop[simSettings.foxPop.Count - 1] < simSettings.rabbitPop[simSettings.rabbitPop.Count - 1] / 2f)
         {
             prey.Add(other.gameObject.transform.parent.gameObject);
         }

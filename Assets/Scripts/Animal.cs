@@ -10,8 +10,6 @@ public class Stat
     public float energy;
     public float speed;
     public float size;
-    public float rowdinessMultiplier;
-    public float rowdiness;
     public float maxAge;
     public float age;
     public float range;
@@ -26,6 +24,7 @@ public class Animal : MonoBehaviour
 
     public Stat stat = new Stat();
     public Stat[] parentStats;
+    public GameObject mainCamera;
 
     int prevXPos;
     int prevYPos;
@@ -45,8 +44,6 @@ public class Animal : MonoBehaviour
     Vector3 endPos;
     float trajectoryHeight = 1;
     float incrementor = 0;
-
-    //TODO recheck height onsistancy
 
     public void theUpdate()
     {
@@ -71,7 +68,6 @@ public class Animal : MonoBehaviour
     {
         stat.speed = (parentStats[0].speed + parentStats[1].speed) / 2;
         stat.size = (parentStats[0].size + parentStats[1].size) / 2;
-        stat.rowdinessMultiplier = (parentStats[0].rowdinessMultiplier + parentStats[1].rowdinessMultiplier) / 2;
         stat.maxAge = (parentStats[0].maxAge + parentStats[1].maxAge) / 2;
         stat.range = (parentStats[0].range + parentStats[1].range) / 2;
 
@@ -84,12 +80,10 @@ public class Animal : MonoBehaviour
 
         if (isChild)
         {
-            stat.rowdiness = 0;
             stat.age = 0;
         }
         else
         {
-            stat.rowdiness = Random.Range(0, 50);
             stat.age = Random.Range(0.0f, stat.maxAge);
         }
     }
@@ -101,9 +95,6 @@ public class Animal : MonoBehaviour
 
         randMultiplier = ((Random.Range(90, 111) / 100f) - 1f) * simSettings.evolMultplier + 1f;
         stat.size *= randMultiplier;
-
-        randMultiplier = ((Random.Range(90, 111) / 100f) - 1f) * simSettings.evolMultplier + 1f;
-        stat.rowdinessMultiplier *= randMultiplier;
 
         randMultiplier = ((Random.Range(90, 111) / 100f) - 1f) * simSettings.evolMultplier + 1f;
         stat.maxAge *= randMultiplier;
@@ -134,7 +125,7 @@ public class Animal : MonoBehaviour
         }
 
         // Reproduce With The Closest Same Animal
-        if (stat.rowdiness >= 50 && hasEaten && selves.Count > 0 && !moved)
+        if (hasEaten && selves.Count > 0 && !moved)
         {
             int index = findClosest(selves, true);
             if (selves[index].GetComponent<Animal>().hasEaten)
@@ -162,8 +153,6 @@ public class Animal : MonoBehaviour
                         {
                             hasEaten = false;
                             selves[index].GetComponent<Animal>().hasEaten = false;
-                            stat.rowdiness = 0;
-                            //stat.energy -= stat.maxEnergy / 4f;
                             GameObject newHeart = Instantiate(heart, transform.position, Quaternion.identity);
                             newHeart.transform.parent = gameObject.transform.parent;
                             GameObject child = Instantiate(selfObject, new Vector3(childPosition[0] + 0.5f, simSettings.blockHeights[childPosition[0], childPosition[1]], simSettings.terrainSize - childPosition[1] - 0.5f), Quaternion.identity);
@@ -227,8 +216,7 @@ public class Animal : MonoBehaviour
                         preyScript.stat.health -= stat.size * 20f;
                         if (preyScript.stat.health < 0)
                         {
-                            //stat.energy = stat.maxEnergy;
-                            stat.energy += preyScript.stat.energy;
+                            stat.energy = stat.maxEnergy;
                             preyScript.die();
                             prey.RemoveAt(index);
                             hasEaten = true;
@@ -455,7 +443,6 @@ public class Animal : MonoBehaviour
     void checkStats()
     {
         stat.energy -= (1f / stat.size) + (stat.range / 10f);
-        stat.rowdiness += stat.rowdinessMultiplier;
         if (stat.energy <= stat.maxEnergy / 5f)
         {
             stat.health -= 1;
@@ -508,6 +495,30 @@ public class Animal : MonoBehaviour
             stat.age += 0.1f;
         }
     }
+
+    public IEnumerator checkCamera()
+    {
+        while (true)
+        {
+            if (Vector3.Distance(transform.position, mainCamera.transform.position) > 100)
+            {
+                MeshRenderer[] meshRenderers = GetComponentsInChildren<MeshRenderer>();
+                foreach (MeshRenderer mesh in meshRenderers)
+                {
+                    mesh.enabled = false;
+                }
+            }
+            else
+            {
+                MeshRenderer[] meshRenderers = GetComponentsInChildren<MeshRenderer>();
+                foreach (MeshRenderer mesh in meshRenderers)
+                {
+                    mesh.enabled = true;
+                }
+            }
+            yield return new WaitForSeconds(0.5f);
+        }
+    }
 }
 
 /*
@@ -520,6 +531,8 @@ Movement:
  - make sure they cant go off the edge
  - created a procedure to go to a specific position
  - for move towards i initially used the angle between the blocks, but then i switched to the distance for ease of priority selection
+ - tlk about the initial stats types
+ - optimising by not rendering
 
 
 

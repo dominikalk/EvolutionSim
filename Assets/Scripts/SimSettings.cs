@@ -62,27 +62,24 @@ public class SimSettings: MonoBehaviour
     {
         speed = 1,
         size = 1,
-        rowdinessMultiplier = 10,
         maxAge = 2,
         range = 4
     };
 
     public Stat defaultFoxStat = new Stat()
     {
-        speed = 0.5f,
-        size = 2,
-        rowdinessMultiplier = 20,
+        speed = 0.6f,
+        size = 1.2f,
         maxAge = 5,
-        range = 10
+        range = 5
     };
 
     public Stat defaultWolfStat = new Stat()
     {
-        speed = 0.75f,
-        size = 3,
-        rowdinessMultiplier = 20,
-        maxAge = 8,
-        range = 15
+        speed = 0.8f,
+        size = 2f,
+        maxAge = 6,
+        range = 8
     };
 
     // Start is called before the first frame update
@@ -279,16 +276,24 @@ public class SimSettings: MonoBehaviour
             rabbits = int.Parse(rabbitText.text);
             foxes = int.Parse(foxText.text);
             wolves = int.Parse(wolfText.text);
-            if(rabbits + foxes + wolves > 1500)
+            if(rabbits < 0 || foxes < 0 || wolves < 0)
             {
                 numbersPanel.SetActive(true);
-                numbersPanel.transform.Find("NumbersPanel/Text").GetComponent<Text>().text = "You cannot generate more than 1500 animals";
+                numbersPanel.transform.Find("NumbersPanel/Text").GetComponent<Text>().text = "You cannot generate a negative number of animals";
             }
             else
             {
-                settingsPanel.SetActive(false);
-                QualitySettings.SetQualityLevel(renderQuality, true);
-                stage = 1;
+                if (rabbits + foxes + wolves > 1000)
+                {
+                    numbersPanel.SetActive(true);
+                    numbersPanel.transform.Find("NumbersPanel/Text").GetComponent<Text>().text = "You cannot generate more than 1000 animals";
+                }
+                else
+                {
+                    settingsPanel.SetActive(false);
+                    QualitySettings.SetQualityLevel(renderQuality, true);
+                    stage = 1;
+                }
             }
         }
         catch

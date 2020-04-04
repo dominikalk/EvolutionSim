@@ -27,11 +27,11 @@ public class PlantGenerator : MonoBehaviour
         int objectThickness;
         if(simSettings.stage == 3)
         {
-            objectThickness = simSettings.objectThickness * 2;
+            objectThickness = 50;
         }
         else
         {
-            objectThickness = simSettings.objectThickness * 20;
+            objectThickness = 500;
         }
         float[,] blockHeights = simSettings.blockHeights;
 

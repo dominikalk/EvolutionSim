@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 namespace LowPolyWater
 {
@@ -24,6 +25,7 @@ namespace LowPolyWater
         void Start()
         {
             CreateMeshLowPoly(meshFilter);
+            StartCoroutine("coGenerateWave");
         }
 
         /// <summary>
@@ -63,7 +65,7 @@ namespace LowPolyWater
         
         void Update()
         {
-            GenerateWaves();
+            //GenerateWaves();
         }
 
         /// <summary>
@@ -96,6 +98,15 @@ namespace LowPolyWater
             mesh.RecalculateNormals();
             mesh.MarkDynamic();
             meshFilter.mesh = mesh;
+        }
+
+        IEnumerator coGenerateWave()
+        {
+            while (true)
+            {
+                yield return new WaitForSeconds(Time.deltaTime * 1.5f);
+                GenerateWaves();
+            }
         }
     }
 }

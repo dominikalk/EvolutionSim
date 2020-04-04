@@ -17,9 +17,11 @@ public class Rabbit : Animal
 
         setStatValues();
         GetComponent<SphereCollider>().radius = stat.range;
+        mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
 
         StartCoroutine("tick");
         StartCoroutine("incrementAge");
+        StartCoroutine("checkCamera");
     }
 
     // Update is called once per frame
