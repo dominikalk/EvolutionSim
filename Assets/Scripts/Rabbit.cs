@@ -13,15 +13,13 @@ public class Rabbit : Animal
         selves = new List<GameObject>();
         predators = new List<GameObject>();
 
-        hasEaten = false;
-
         setStatValues();
         GetComponent<SphereCollider>().radius = stat.range;
-        mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
+        rb = GetComponent<Rigidbody>();
 
         StartCoroutine("tick");
         StartCoroutine("incrementAge");
-        StartCoroutine("checkCamera");
+        gameObject.name = "Rabbit";
     }
 
     // Update is called once per frame

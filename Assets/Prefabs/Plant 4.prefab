@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1998301334746462759}
   - component: {fileID: 1181152979218550973}
-  - component: {fileID: 2335651097085532547}
   - component: {fileID: 4140523964246039910}
+  - component: {fileID: 1848063457553832721}
   m_Layer: 0
   m_Name: Plant 4
   m_TagString: plant
@@ -42,7 +42,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1668810138673702762}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 9b6451a938879dd45b9dd66c9bf6400c, type: 2}
   m_CullingMode: 0
@@ -53,20 +53,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!136 &2335651097085532547
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1668810138673702762}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  m_Radius: 0.39
-  m_Height: 0
-  m_Direction: 1
-  m_Center: {x: 0, y: 0.4, z: 0}
 --- !u!114 &4140523964246039910
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -79,6 +65,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: edd50e89994c8224588b10329fa634a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!65 &1848063457553832721
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1668810138673702762}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.5, y: 0.52, z: 0.48}
+  m_Center: {x: 0, y: 0.27, z: 0}
 --- !u!1001 &5782131606322871983
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -151,9 +150,19 @@ PrefabInstance:
       propertyPath: m_CastShadows
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6764239483135415401, guid: 3ae7f711e98355842bfcca11a297c42b,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5072777994811179008, guid: 3ae7f711e98355842bfcca11a297c42b,
         type: 3}
       propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5072777994811179008, guid: 3ae7f711e98355842bfcca11a297c42b,
+        type: 3}
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9164820145690341009, guid: 3ae7f711e98355842bfcca11a297c42b,
@@ -161,14 +170,29 @@ PrefabInstance:
       propertyPath: m_CastShadows
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9164820145690341009, guid: 3ae7f711e98355842bfcca11a297c42b,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: -8750570222362912562, guid: 3ae7f711e98355842bfcca11a297c42b,
+        type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8750570222362912562, guid: 3ae7f711e98355842bfcca11a297c42b,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3447140721923201676, guid: 3ae7f711e98355842bfcca11a297c42b,
         type: 3}
       propertyPath: m_CastShadows
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3447140721923201676, guid: 3ae7f711e98355842bfcca11a297c42b,
         type: 3}
-      propertyPath: m_CastShadows
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

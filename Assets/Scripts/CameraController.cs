@@ -102,4 +102,31 @@ public class CameraController : MonoBehaviour
             transform.position = new Vector3(transform.position.x, 10f, transform.position.z);
         }
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.tag == "plant")
+        {
+            MeshRenderer[] meshRenderers = other.GetComponentsInChildren<MeshRenderer>();
+            foreach (MeshRenderer mesh in meshRenderers)
+            {
+                mesh.enabled = true;
+            }
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.tag == "plant")
+        {
+            if (other.tag == "plant")
+            {
+                MeshRenderer[] meshRenderers = other.GetComponentsInChildren<MeshRenderer>();
+                foreach (MeshRenderer mesh in meshRenderers)
+                {
+                    mesh.enabled = false;
+                }
+            }
+        }
+    }
 }

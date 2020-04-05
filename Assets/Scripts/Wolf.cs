@@ -15,11 +15,11 @@ public class Wolf : Animal
 
         setStatValues();
         GetComponent<SphereCollider>().radius = stat.range;
-        mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
+        rb = GetComponent<Rigidbody>();
 
         StartCoroutine("tick");
         StartCoroutine("incrementAge");
-        StartCoroutine("checkCamera");
+        gameObject.name = "Wolf";
     }
 
     // Update is called once per frame

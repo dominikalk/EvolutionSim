@@ -9,6 +9,7 @@ TagManager:
   - rabbit
   - fox
   - wolf
+  - animal
   layers:
   - Default
   - TransparentFX

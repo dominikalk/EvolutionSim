@@ -253,3 +253,8 @@ public class Graph : MonoBehaviour
         return scale * (Mathf.Round(d / scale * Mathf.Pow(10f, digits)) / Mathf.Pow(10f, digits));
     }
 }
+
+/*
+ Issues:
+  - Label scale lize changed, so had to fix it to new Vector3(1,1,1)
+     */

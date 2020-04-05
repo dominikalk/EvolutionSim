@@ -3074,7 +3074,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 400, z: 512}
+  m_Size: {x: 10, y: 450, z: 512}
   m_Center: {x: -210, y: 200, z: 0}
 --- !u!65 &405444610
 BoxCollider:
@@ -3087,7 +3087,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 512, y: 1, z: 512}
+  m_Size: {x: 512, y: 10, z: 512}
   m_Center: {x: 0, y: 300, z: 0}
 --- !u!65 &405444611
 BoxCollider:
@@ -3100,7 +3100,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 512, y: 400, z: 1}
+  m_Size: {x: 512, y: 450, z: 10}
   m_Center: {x: 0, y: 200, z: -220}
 --- !u!65 &405444612
 BoxCollider:
@@ -3113,7 +3113,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 512, y: 400, z: 1}
+  m_Size: {x: 512, y: 450, z: 10}
   m_Center: {x: 0, y: 200, z: 210}
 --- !u!65 &405444613
 BoxCollider:
@@ -3126,7 +3126,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 400, z: 512}
+  m_Size: {x: 10, y: 450, z: 512}
   m_Center: {x: 220, y: 200, z: 0}
 --- !u!1 &407060352
 GameObject:
@@ -7724,6 +7724,7 @@ GameObject:
   - component: {fileID: 1194912754}
   - component: {fileID: 1194912755}
   - component: {fileID: 1194912756}
+  - component: {fileID: 1194912757}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -7809,9 +7810,9 @@ Rigidbody:
   m_AngularDrag: 0
   m_UseGravity: 0
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!114 &1194912755
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7838,6 +7839,19 @@ CapsuleCollider:
   m_Radius: 0.5
   m_Height: 1
   m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!135 &1194912757
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1194912750}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 30
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1204201905
 GameObject:

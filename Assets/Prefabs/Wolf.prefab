@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7179558779818098114}
-  - component: {fileID: 5495784267326371207}
+  - component: {fileID: 901947804782348722}
   m_Layer: 0
   m_Name: Trigger
   m_TagString: wolf
@@ -31,8 +31,8 @@ Transform:
   m_Father: {fileID: 7075068466814216612}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!136 &5495784267326371207
-CapsuleCollider:
+--- !u!65 &901947804782348722
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -41,9 +41,8 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
-  m_Radius: 0.16
-  m_Height: 1.03
-  m_Direction: 2
+  serializedVersion: 2
+  m_Size: {x: 0.31, y: 0.32, z: 1}
   m_Center: {x: 0, y: 0.37, z: 0}
 --- !u!1 &7075068466814216613
 GameObject:
@@ -60,7 +59,7 @@ GameObject:
   - component: {fileID: 7557607340011721348}
   m_Layer: 0
   m_Name: Wolf
-  m_TagString: Untagged
+  m_TagString: animal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -131,6 +130,7 @@ MonoBehaviour:
   isChild: 0
   hasEaten: 0
   simSettings: {fileID: 0}
+  rb: {fileID: 0}
   skull: {fileID: 3341896045655671534, guid: 2166c619ddd44c344bcd54e4d90ce76e, type: 3}
   heart: {fileID: 3965690242672755483, guid: fdda5f0f4aeb17e4586b28ffa36ad9b3, type: 3}
 --- !u!95 &7557607340011721348
@@ -163,6 +163,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Wolf
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 72f97adacd1248948bc8dd65ecb89787,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2534866581884222612, guid: 72f97adacd1248948bc8dd65ecb89787,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 72f97adacd1248948bc8dd65ecb89787,
         type: 3}

@@ -24,7 +24,6 @@ public class Animal : MonoBehaviour
 
     public Stat stat = new Stat();
     public Stat[] parentStats;
-    public GameObject mainCamera;
 
     int prevXPos;
     int prevYPos;
@@ -36,6 +35,7 @@ public class Animal : MonoBehaviour
     public bool hasEaten = false;
 
     public SimSettings simSettings;
+    public Rigidbody rb;
     [SerializeField] GameObject skull;
     [SerializeField] GameObject heart;
 
@@ -51,11 +51,12 @@ public class Animal : MonoBehaviour
         {
             incrementor += (1f / stat.speed) * (1f / 0.5f) * Time.deltaTime;
             Vector3 currentPos = Vector3.Lerp(startPos, endPos, incrementor);
-            if (gameObject.transform.Find("Trigger").gameObject.tag == "rabbit")
+            if (gameObject.name == "Rabbit")
             {
                 currentPos.y += trajectoryHeight * Mathf.Sin(Mathf.Clamp01(incrementor) * Mathf.PI);
             }
-            gameObject.transform.position = currentPos;
+            //gameObject.transform.position = currentPos;
+            rb.MovePosition(currentPos);
             if (gameObject.transform.position == endPos)
             {
                 moving = false;
@@ -202,7 +203,7 @@ public class Animal : MonoBehaviour
             {
                 if (surrounding[i, 0] == toX && surrounding[i, 1] == toY)
                 {
-                    if (gameObject.transform.Find("Trigger").gameObject.tag == "rabbit")
+                    if (gameObject.name == "Rabbit")
                     {
                         prey[index].GetComponent<Plant>().eat();
                         simSettings.usedBlocks[(int)toX, (int)toY] = false;
@@ -495,30 +496,6 @@ public class Animal : MonoBehaviour
             stat.age += 0.1f;
         }
     }
-
-    public IEnumerator checkCamera()
-    {
-        while (true)
-        {
-            if (Vector3.Distance(transform.position, mainCamera.transform.position) > 100)
-            {
-                MeshRenderer[] meshRenderers = GetComponentsInChildren<MeshRenderer>();
-                foreach (MeshRenderer mesh in meshRenderers)
-                {
-                    mesh.enabled = false;
-                }
-            }
-            else
-            {
-                MeshRenderer[] meshRenderers = GetComponentsInChildren<MeshRenderer>();
-                foreach (MeshRenderer mesh in meshRenderers)
-                {
-                    mesh.enabled = true;
-                }
-            }
-            yield return new WaitForSeconds(0.5f);
-        }
-    }
 }
 
 /*
@@ -533,6 +510,8 @@ Movement:
  - for move towards i initially used the angle between the blocks, but then i switched to the distance for ease of priority selection
  - tlk about the initial stats types
  - optimising by not rendering
+  - object name performance issues
+  - changed from capsule to box xollider
 
 
 
