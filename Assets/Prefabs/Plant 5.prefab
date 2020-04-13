@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2885351938575886288}
   - component: {fileID: 3913398406741082796}
-  - component: {fileID: 6163348089591319207}
   - component: {fileID: 2675958477351733911}
   m_Layer: 0
   m_Name: Plant 5
@@ -42,7 +41,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5815736610697454946}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 9b6451a938879dd45b9dd66c9bf6400c, type: 2}
   m_CullingMode: 0
@@ -53,18 +52,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &6163348089591319207
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5815736610697454946}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: edd50e89994c8224588b10329fa634a3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!65 &2675958477351733911
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -9,14 +9,14 @@ using System.Linq;
 
 public class Graph : MonoBehaviour
 {
-    RectTransform graphContainer;
-    [SerializeField] Sprite circleSprite;
-    RectTransform labelTemplateX;
-    RectTransform labelTemplateY;
-    RectTransform dashTemplateX;
-    RectTransform dashTemplateY;
-    GameObject toolTip;
-    GameObject notEnough;
+    private RectTransform graphContainer;
+    [SerializeField] private Sprite circleSprite;
+    private RectTransform labelTemplateX;
+    private RectTransform labelTemplateY;
+    private RectTransform dashTemplateX;
+    private RectTransform dashTemplateY;
+    private GameObject toolTip;
+    private GameObject notEnough;
     public List<float> rabbitList = new List<float>();
     public List<float> foxList = new List<float>();
     public List<float> wolfList = new List<float>();
@@ -33,7 +33,7 @@ public class Graph : MonoBehaviour
         notEnough = graphContainer.Find("NotEnough").gameObject;
     }
 
-    IEnumerator addGraphValue()
+    private IEnumerator addGraphValue()
     {
         while (true)
         {
@@ -46,7 +46,7 @@ public class Graph : MonoBehaviour
         }
     }
 
-    void clear()
+    private void clear()
     {
         Transform[] targets = graphContainer.GetComponentsInChildren<Transform>();
         for(int i = 0; i < targets.Length; i++)
@@ -79,7 +79,7 @@ public class Graph : MonoBehaviour
         toolTip.SetActive(false);
     }
 
-    GameObject CreateCircle(Vector2 position)
+    private GameObject CreateCircle(Vector2 position)
     {
         GameObject circle = new GameObject("circle", typeof(Image));
         circle.transform.SetParent(graphContainer, false);
@@ -178,7 +178,7 @@ public class Graph : MonoBehaviour
         }
     }
 
-    void CreateLineGraph(List<float> popList, int i, float xSize, float xPos, float yMax, float graphHeight, ref GameObject lastCircleGameObject, Color color)
+    private void CreateLineGraph(List<float> popList, int i, float xSize, float xPos, float yMax, float graphHeight, ref GameObject lastCircleGameObject, Color color)
     {
         float yPos = (popList[i] / yMax) * graphHeight;
         float textHeight = popList[i];
@@ -206,7 +206,7 @@ public class Graph : MonoBehaviour
         lastCircleGameObject = circleGameObject;
     }
 
-    GameObject CreateLine(Vector2 posA, Vector2 posB)
+    private GameObject CreateLine(Vector2 posA, Vector2 posB)
     {
         GameObject line = new GameObject("dotConnection", typeof(Image));
         line.transform.SetParent(graphContainer, false);
@@ -242,7 +242,7 @@ public class Graph : MonoBehaviour
         ShowGraph();
     }
 
-    float roundToSF(float d, int digits)
+    private float roundToSF(float d, int digits)
     {
         if (d == 0)
         {

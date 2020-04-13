@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class AnimalGenerator : MonoBehaviour
 {
-    [SerializeField] GameObject rabbit;
-    [SerializeField] GameObject fox;
-    [SerializeField] GameObject wolf;
+    [SerializeField] private GameObject rabbit;
+    [SerializeField] private GameObject fox;
+    [SerializeField] private GameObject wolf;
 
     // Start is called before the first frame update
     void Start()

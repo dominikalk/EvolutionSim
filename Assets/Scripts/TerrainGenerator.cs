@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class TerrainGenerator : MonoBehaviour
 {
-    [SerializeField] Gradient gradient;
-    [SerializeField] GameObject water;
-    int terrainSize;
+    [SerializeField] private Gradient gradient;
+    [SerializeField] private GameObject water;
+    private int terrainSize;
 
     // Start is called before the first frame update
     void Start()
@@ -163,7 +163,7 @@ public class TerrainGenerator : MonoBehaviour
         simsettings.stage += 1;
     }
 
-    bool CheckEnd(int pos)
+    private bool CheckEnd(int pos)
     {
         // convert to float to return float
         float fPos = pos;
@@ -176,7 +176,7 @@ public class TerrainGenerator : MonoBehaviour
         return true;
     }
 
-    void GetTopBotVertex(Vector3[] vertices, ref float topVertex, ref float botVertex)
+    private void GetTopBotVertex(Vector3[] vertices, ref float topVertex, ref float botVertex)
     {
         for(int i = 0; i < vertices.Length; i++)
         {
@@ -191,7 +191,7 @@ public class TerrainGenerator : MonoBehaviour
         }
     }
 
-    bool CheckDiagonalRight(int pos, int i)
+    private bool CheckDiagonalRight(int pos, int i)
     {
         float TS1 = terrainSize + 1;
         float firstDiagonal = terrainSize * i;
@@ -204,7 +204,7 @@ public class TerrainGenerator : MonoBehaviour
         return true;
     }
 
-    bool CheckDiagonalLeft(int pos, int i)
+    private bool CheckDiagonalLeft(int pos, int i)
     {
         float TS1 = terrainSize + 1;
         float firstDiagonal = (terrainSize + 2) * i - (terrainSize + 2);
@@ -217,7 +217,7 @@ public class TerrainGenerator : MonoBehaviour
         return true;
     }
 
-    Vector3[] LowerEdges(Vector3[] vertices)
+    private Vector3[] LowerEdges(Vector3[] vertices)
     {
         float edgeSize = terrainSize / 4f;
         float farIn = 0f;

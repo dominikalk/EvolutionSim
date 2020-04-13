@@ -17,7 +17,7 @@ public class Stat
 
 public class Animal : MonoBehaviour
 {
-    [SerializeField] GameObject selfObject;
+    [SerializeField] private GameObject selfObject;
     public List<GameObject> prey;
     public List<GameObject> selves;
     public List<GameObject> predators;
@@ -25,8 +25,8 @@ public class Animal : MonoBehaviour
     public Stat stat = new Stat();
     public Stat[] parentStats;
 
-    int prevXPos;
-    int prevYPos;
+    private int prevXPos;
+    private int prevYPos;
 
     public int xPos;
     public int yPos;
@@ -36,14 +36,14 @@ public class Animal : MonoBehaviour
 
     public SimSettings simSettings;
     public Rigidbody rb;
-    [SerializeField] GameObject skull;
-    [SerializeField] GameObject heart;
+    [SerializeField] private GameObject skull;
+    [SerializeField] private GameObject heart;
 
-    bool moving;
-    Vector3 startPos;
-    Vector3 endPos;
-    float trajectoryHeight = 1;
-    float incrementor = 0;
+    private bool moving;
+    private Vector3 startPos;
+    private Vector3 endPos;
+    private float trajectoryHeight = 1;
+    private float incrementor = 0;
 
     public void theUpdate()
     {
@@ -55,7 +55,6 @@ public class Animal : MonoBehaviour
             {
                 currentPos.y += trajectoryHeight * Mathf.Sin(Mathf.Clamp01(incrementor) * Mathf.PI);
             }
-            //gameObject.transform.position = currentPos;
             rb.MovePosition(currentPos);
             if (gameObject.transform.position == endPos)
             {
@@ -89,7 +88,7 @@ public class Animal : MonoBehaviour
         }
     }
 
-    void evolveStats()
+    private void evolveStats()
     {
         float randMultiplier = ((Random.Range(90, 111) / 100f) - 1f) * simSettings.evolMultplier + 1f;
         stat.speed *= randMultiplier;
@@ -104,7 +103,7 @@ public class Animal : MonoBehaviour
         stat.range *= randMultiplier;
     }
 
-    public void chooseMove()
+    private void chooseMove()
     {
         prey = checkExists(prey);
         selves = checkExists(selves);
@@ -156,6 +155,7 @@ public class Animal : MonoBehaviour
                             selves[index].GetComponent<Animal>().hasEaten = false;
                             GameObject newHeart = Instantiate(heart, transform.position, Quaternion.identity);
                             newHeart.transform.parent = gameObject.transform.parent;
+                            Destroy(newHeart, 4.2f);
                             GameObject child = Instantiate(selfObject, new Vector3(childPosition[0] + 0.5f, simSettings.blockHeights[childPosition[0], childPosition[1]], simSettings.terrainSize - childPosition[1] - 0.5f), Quaternion.identity);
                             Animal script = child.GetComponent<Animal>();
                             script.xPos = childPosition[0];
@@ -175,7 +175,7 @@ public class Animal : MonoBehaviour
             }
         }
 
-        // Eat The Closest Food
+        // Move To Closest Food
         if (stat.energy < stat.maxEnergy / 2f && prey.Count > 0 && !moved)
         {
             int index = findClosest(prey, false);
@@ -205,7 +205,7 @@ public class Animal : MonoBehaviour
                 {
                     if (gameObject.name == "Rabbit")
                     {
-                        prey[index].GetComponent<Plant>().eat();
+                        eatPlant(prey[index]);
                         simSettings.usedBlocks[(int)toX, (int)toY] = false;
                         prey.RemoveAt(index);
                         stat.energy += 20;
@@ -233,7 +233,7 @@ public class Animal : MonoBehaviour
         checkStats();
     }
 
-    void randomMove()
+    private void randomMove()
     {
         List<int[]> positions = new List<int[]>();
         int terrainSize = simSettings.terrainSize;
@@ -282,7 +282,7 @@ public class Animal : MonoBehaviour
         }
     }
 
-    void moveTowards(int toX, int toY, bool isTowards)
+    private void moveTowards(int toX, int toY, bool isTowards)
     {
         List<int[]> priority = new List<int[]>();
         int[,] surrounding = findSurrounding(xPos, yPos, false);
@@ -335,7 +335,7 @@ public class Animal : MonoBehaviour
         }
     }
 
-    void jumpTo(Vector3 position)
+    private void jumpTo(Vector3 position)
     {
         float angle = Mathf.Atan2(position.x - gameObject.transform.position.x,position.z - gameObject.transform.position.z) * 180 / Mathf.PI;
         gameObject.transform.rotation = Quaternion.Euler(0, angle, 0);
@@ -344,7 +344,7 @@ public class Animal : MonoBehaviour
         endPos = position;
     }
 
-    int[] randomPicker(List<int[]> positions)
+    private int[] randomPicker(List<int[]> positions)
     {
         if(positions.Count > 0)
         {
@@ -356,7 +356,7 @@ public class Animal : MonoBehaviour
         }
     }
 
-    int[,] findSurrounding(int x, int y, bool isPrev)
+    private int[,] findSurrounding(int x, int y, bool isPrev)
     {
         int[,] surroundingBlocks;
         // includes middle block
@@ -393,7 +393,7 @@ public class Animal : MonoBehaviour
         return surroundingBlocks;
     }
 
-    int findClosest(List<GameObject> theObjects, bool self)
+    private int findClosest(List<GameObject> theObjects, bool self)
     {
         float distance = Mathf.Infinity;
         int index = 0;
@@ -419,12 +419,12 @@ public class Animal : MonoBehaviour
         return index;
     }
 
-    float findDistance(float theXPos, float theYPos, float toX, float toY)
+    private float findDistance(float theXPos, float theYPos, float toX, float toY)
     {
         return Mathf.Sqrt((float)(toX - theXPos) * (float)(toX - theXPos) + (float)(toY - theYPos) * (float)(toY - theYPos));
     }
 
-    List<GameObject> checkExists(List<GameObject> whatObjects)
+    private List<GameObject> checkExists(List<GameObject> whatObjects)
     {
         List<GameObject> toRemoveList = new List<GameObject>();
         foreach (GameObject whatObject in whatObjects)
@@ -441,7 +441,7 @@ public class Animal : MonoBehaviour
         return whatObjects;
     }
 
-    void checkStats()
+    private void checkStats()
     {
         stat.energy -= (1f / stat.size) + (stat.range / 10f);
         if (stat.energy <= stat.maxEnergy / 5f)
@@ -496,6 +496,12 @@ public class Animal : MonoBehaviour
             stat.age += 0.1f;
         }
     }
+
+    private void eatPlant(GameObject plant)
+    {
+        plant.gameObject.GetComponent<Animator>().SetTrigger("eat");
+        Destroy(plant, 2f);
+    }
 }
 
 /*
@@ -512,6 +518,7 @@ Movement:
  - optimising by not rendering
   - object name performance issues
   - changed from capsule to box xollider
+  - removed scripts from plants, hearts and skulls to improve performance
 
 
 

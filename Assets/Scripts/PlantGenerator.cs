@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class PlantGenerator : MonoBehaviour
 {
-    [SerializeField] GameObject[] plants;
-    SimSettings simSettings;
+    [SerializeField] private GameObject[] plants;
+    private SimSettings simSettings;
 
     // Start is called before the first frame update
     void Start()
@@ -64,7 +64,7 @@ public class PlantGenerator : MonoBehaviour
         }
     }
 
-    IEnumerator spawnNewPlant()
+    private IEnumerator spawnNewPlant()
     {
         while (true)
         {

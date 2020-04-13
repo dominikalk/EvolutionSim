@@ -21,13 +21,13 @@ public class SimSettings: MonoBehaviour
     public bool[,] usedBlocks;
     public float[,] blockHeights;
     public int stage;
-    bool stage1;
-    bool stage2;
-    bool stage3;
-    bool stage4;
-    bool stage5;
+    private bool stage1;
+    private bool stage2;
+    private bool stage3;
+    private bool stage4;
+    private bool stage5;
 
-    bool paused;
+    private bool paused;
 
     public List<float> rabbitPop;
     public List<float> foxPop;
@@ -37,24 +37,24 @@ public class SimSettings: MonoBehaviour
     public List<float> foxOption;
     public List<float> wolfOption;
 
-    [SerializeField] GameObject settingsPanel;
-    [SerializeField] GameObject numbersPanel;
-    [SerializeField] Text rabbitText;
-    [SerializeField] Text foxText;
-    [SerializeField] Text wolfText;
-    [SerializeField] Text loadingText;
-    [SerializeField] GameObject loadingPanel;
-    [SerializeField] Slider loadingSlider;
-    [SerializeField] GameObject pausePanel;
-    [SerializeField] Slider timeSlider;
-    [SerializeField] Slider volumeSlider;
-    [SerializeField] Toggle volumeToggle;
+    [SerializeField] private GameObject settingsPanel;
+    [SerializeField] private GameObject numbersPanel;
+    [SerializeField] private Text rabbitText;
+    [SerializeField] private Text foxText;
+    [SerializeField] private Text wolfText;
+    [SerializeField] private Text loadingText;
+    [SerializeField] private GameObject loadingPanel;
+    [SerializeField] private Slider loadingSlider;
+    [SerializeField] private GameObject pausePanel;
+    [SerializeField] private Slider timeSlider;
+    [SerializeField] private Slider volumeSlider;
+    [SerializeField] private Toggle volumeToggle;
 
-    [SerializeField] GameObject graph;
-    [SerializeField] Text optionText;
-    [SerializeField] Toggle populationButton;
+    [SerializeField] private GameObject graph;
+    [SerializeField] private Text optionText;
+    [SerializeField] private Toggle populationButton;
 
-    [SerializeField] GameObject populationCorner;
+    [SerializeField] private GameObject populationCorner;
 
     public bool lockedScreen;
 
@@ -166,7 +166,7 @@ public class SimSettings: MonoBehaviour
         }
     }
 
-    IEnumerator checkAverage()
+    private IEnumerator checkAverage()
     {
         while (true)
         {
@@ -337,6 +337,7 @@ public class SimSettings: MonoBehaviour
     {
         Time.timeScale = timeSlider.value;
         paused = false;
+
         populationCorner.SetActive(true);
         pausePanel.SetActive(false);
         lockedScreen = true;

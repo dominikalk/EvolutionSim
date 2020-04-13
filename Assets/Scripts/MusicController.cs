@@ -32,7 +32,7 @@ public class MusicController : MonoBehaviour
         StartCoroutine("playSongs");
     }
 
-    IEnumerator playSongs()
+    private IEnumerator playSongs()
     {
         while (true)
         {

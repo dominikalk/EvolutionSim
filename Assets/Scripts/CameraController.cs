@@ -4,23 +4,23 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    Rigidbody myRigid;
-    SimSettings simSettings;
+    private Rigidbody myRigid;
+    private SimSettings simSettings;
 
-    float speed = 150f;
-    float rotSpeed = 2;
+    private float speed = 150f;
+    private float rotSpeed = 2;
 
-    float yaw = 0f;
-    float pitch = 0f;
+    private float yaw = 0f;
+    private float pitch = 0f;
 
 
-    bool isCinematic;
-    Vector3 initPosition;
-    Quaternion initRotation;
-    float cinematicSpeed = 1;
-    float journeyLength = 4;
-    float distCovered;
-    [SerializeField] GameObject cinematicPosition;
+    private bool isCinematic;
+    private Vector3 initPosition;
+    private Quaternion initRotation;
+    private float cinematicSpeed = 1;
+    private float journeyLength = 4;
+    private float distCovered;
+    [SerializeField] private GameObject cinematicPosition;
 
 
     // Start is called before the first frame update
