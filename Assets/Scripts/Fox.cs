@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Fox : Animal
 {
+    private bool canEat = true;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -30,7 +32,8 @@ public class Fox : Animal
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "rabbit" && simSettings.rabbitPop.Count > 0 && simSettings.foxPop[simSettings.foxPop.Count - 1] < simSettings.rabbitPop[simSettings.rabbitPop.Count - 1] / 2f)
+        checkCanEat();
+        if (other.tag == "rabbit" && canEat)
         {
             prey.Add(other.gameObject.transform.parent.gameObject);
         }
@@ -57,6 +60,21 @@ public class Fox : Animal
         if (other.tag == "wolf")
         {
             predators.Remove(other.gameObject.transform.parent.gameObject);
+        }
+    }
+
+    void checkCanEat()
+    {
+        if (simSettings.rabbitPop.Count > 0)
+        {
+            if (simSettings.foxPop[simSettings.foxPop.Count - 1] < simSettings.rabbitPop[simSettings.rabbitPop.Count - 1] / 1.75f)
+            {
+                canEat = true;
+            }
+            else if (simSettings.foxPop[simSettings.foxPop.Count - 1] > simSettings.rabbitPop[simSettings.rabbitPop.Count - 1] / 2.25f)
+            {
+                canEat = false;
+            }
         }
     }
 }

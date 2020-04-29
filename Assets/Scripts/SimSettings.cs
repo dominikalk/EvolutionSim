@@ -340,7 +340,10 @@ public class SimSettings: MonoBehaviour
 
         populationCorner.SetActive(true);
         pausePanel.SetActive(false);
-        lockedScreen = true;
+        if (!FindObjectOfType<CameraController>().isCinematic)
+        {
+            lockedScreen = true;
+        }
     }
 
     public void resetSimulation()

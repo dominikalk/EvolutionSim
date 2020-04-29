@@ -14,7 +14,7 @@ public class CameraController : MonoBehaviour
     private float pitch = 0f;
 
 
-    private bool isCinematic;
+    public bool isCinematic;
     private Vector3 initPosition;
     private Quaternion initRotation;
     private float cinematicSpeed = 1;
@@ -42,6 +42,7 @@ public class CameraController : MonoBehaviour
                 isCinematic = false;
                 pitch = transform.eulerAngles.x;
                 yaw = transform.eulerAngles.y;
+                simSettings.lockedScreen = true;
             }
             else
             {
@@ -49,6 +50,7 @@ public class CameraController : MonoBehaviour
                 distCovered = 0;
                 initPosition = transform.position;
                 initRotation = transform.rotation;
+                simSettings.lockedScreen = false;
             }
         }
 
@@ -62,22 +64,23 @@ public class CameraController : MonoBehaviour
                 pitch -= rotSpeed * Input.GetAxis("Mouse Y");
                 transform.eulerAngles = new Vector3(pitch, yaw, 0f);
             }
-            else
-            {
-                distCovered += Time.deltaTime * (cinematicSpeed / Time.timeScale);
-                float fractionOfJourney = distCovered / journeyLength;
-                transform.position = Vector3.Lerp(initPosition, cinematicPosition.transform.position, fractionOfJourney);
-                transform.rotation = Quaternion.Lerp(initRotation, cinematicPosition.transform.rotation, fractionOfJourney);
-                transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, 0f);
-                pitch = transform.eulerAngles.x;
-                yaw = transform.eulerAngles.y;
-            }
         }
         else
         {
             transform.eulerAngles = new Vector3(pitch, yaw, 0f);
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
+        }
+
+        if(Time.timeScale > 0 && isCinematic)
+        {
+            distCovered += Time.deltaTime * (cinematicSpeed / Time.timeScale);
+            float fractionOfJourney = distCovered / journeyLength;
+            transform.position = Vector3.Lerp(initPosition, cinematicPosition.transform.position, fractionOfJourney);
+            transform.rotation = Quaternion.Lerp(initRotation, cinematicPosition.transform.rotation, fractionOfJourney);
+            transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, 0f);
+            pitch = transform.eulerAngles.x;
+            yaw = transform.eulerAngles.y;
         }
 
         if (Input.GetKey(KeyCode.W))

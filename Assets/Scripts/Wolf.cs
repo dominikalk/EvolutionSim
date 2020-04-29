@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class Wolf : Animal
 {
+    private bool canEatFox = true;
+    private bool canEatRabbit = true;
+    private bool foxesCanEat = true;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -30,11 +34,12 @@ public class Wolf : Animal
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "fox" && simSettings.foxPop.Count > 0 && simSettings.foxPop[simSettings.foxPop.Count - 1] > simSettings.rabbitPop[simSettings.rabbitPop.Count - 1] / 2f && simSettings.foxPop[simSettings.foxPop.Count - 1] > simSettings.wolfPop[simSettings.wolfPop.Count - 1] * 1.5f)
+        checkCanEat();
+        if (other.tag == "fox" && simSettings.foxPop.Count > 0 && foxesCanEat && canEatFox)
         {
             prey.Add(other.gameObject.transform.parent.gameObject);
         }
-        if (other.tag == "rabbit" && simSettings.rabbitPop.Count > 0 && simSettings.rabbitPop[simSettings.rabbitPop.Count - 1] > simSettings.foxPop[simSettings.foxPop.Count - 1] * 2f && simSettings.rabbitPop[simSettings.rabbitPop.Count - 1] > simSettings.wolfPop[simSettings.wolfPop.Count - 1] * 3f)
+        if (other.tag == "rabbit" && simSettings.rabbitPop.Count > 0 && foxesCanEat && canEatRabbit)
         {
             prey.Add(other.gameObject.transform.parent.gameObject);
         }
@@ -54,6 +59,39 @@ public class Wolf : Animal
         if (other.tag == "wolf")
         {
             selves.Remove(other.gameObject.transform.parent.gameObject);
+        }
+    }
+
+    void checkCanEat()
+    {
+        if (simSettings.foxPop.Count > 0)
+        {
+            if (simSettings.wolfPop[simSettings.wolfPop.Count - 1] < simSettings.foxPop[simSettings.foxPop.Count - 1] / 1.25f)
+            {
+                canEatFox = true;
+            }
+            else if (simSettings.wolfPop[simSettings.wolfPop.Count - 1] > simSettings.foxPop[simSettings.foxPop.Count - 1] / 1.75f)
+            {
+                canEatFox = false;
+            }
+
+            if (simSettings.wolfPop[simSettings.wolfPop.Count - 1] < simSettings.rabbitPop[simSettings.rabbitPop.Count - 1] / 2.75f)
+            {
+                canEatRabbit = true;
+            }
+            else if (simSettings.wolfPop[simSettings.wolfPop.Count - 1] > simSettings.rabbitPop[simSettings.rabbitPop.Count - 1] / 3.25f)
+            {
+                canEatRabbit = false;
+            }
+
+            if (simSettings.foxPop[simSettings.foxPop.Count - 1] < simSettings.rabbitPop[simSettings.rabbitPop.Count - 1] / 1.75f)
+            {
+                foxesCanEat = true;
+            }
+            else if (simSettings.foxPop[simSettings.foxPop.Count - 1] > simSettings.rabbitPop[simSettings.rabbitPop.Count - 1] / 2.25f)
+            {
+                foxesCanEat = false;
+            }
         }
     }
 }
