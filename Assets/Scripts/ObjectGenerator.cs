@@ -25,7 +25,7 @@ public class ObjectGenerator : MonoBehaviour
         int terrainSize = simSettings.terrainSize;
         int objectThickness = simSettings.objectThickness;
         bool[,] usedBlocks = new bool[terrainSize, terrainSize];
-        float[,] topHeights = new float[terrainSize, terrainSize];
+        float[,] bottomHeights = new float[terrainSize, terrainSize];
         float[,] blockHeights = new float[terrainSize, terrainSize];
 
         // Set Array Heights
@@ -56,7 +56,7 @@ public class ObjectGenerator : MonoBehaviour
                 }
 
                 blockHeights[terrainSize - 1 - v, i] = (topHeight + botHeight) / 2;
-                topHeights[terrainSize - 1 - v, i] = botHeight;
+                bottomHeights[terrainSize - 1 - v, i] = botHeight;
             }
         }
 
@@ -75,9 +75,9 @@ public class ObjectGenerator : MonoBehaviour
                 int isSpawn = Random.Range(0, (int)Mathf.Round(objectThickness / tempPerlin));
                 int rotation = Random.Range(0, 3);
                 int whatObject = Random.Range(0, objects.Length);
-                if (topHeights[v, i] > 10 && isSpawn == 5)
+                if (bottomHeights[v, i] > 10 && isSpawn == 5)
                 {
-                    GameObject newObject = Instantiate(objects[whatObject], new Vector3(v + 0.5f, topHeights[v, i], terrainSize - i - 0.5f), Quaternion.Euler(0, rotation * 90f, 0));
+                    GameObject newObject = Instantiate(objects[whatObject], new Vector3(v + 0.5f, bottomHeights[v, i], terrainSize - i - 0.5f), Quaternion.Euler(0, rotation * 90f, 0));
                     newObject.transform.parent = gameObject.transform;
                     usedBlocks[v, i] = true;
                 }
