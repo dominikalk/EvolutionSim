@@ -4,7 +4,7 @@ Standalone build is available to download on the game page: https://dominikalk.i
 
 ---
 
-- Edit the properties, generate the terrain and enjoy! Lets see what happens ...
+- Edit the properties, generate the terrain, and enjoy! Lets see what happens ...
 - Watch how the procedurally generated terrain affects the animals' populations.
 - Monitor how the species' evolve to survive in the menu's population and genetic trait graphs.
 
